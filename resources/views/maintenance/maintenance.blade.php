@@ -1,4 +1,4 @@
-@extends('../layouts/layout')
+@extends('../layout')
 @section('content')
 	<section class="col-md-5 panel panel-default mainPanel">
 		<div>					

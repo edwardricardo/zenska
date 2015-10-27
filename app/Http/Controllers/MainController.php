@@ -2,7 +2,12 @@
 
 class MainController extends Controller{
 
-	public function getIndex(){		
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
+
+	public function getIndex(){
 		return view('main');
 	}
 }

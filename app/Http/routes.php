@@ -15,7 +15,7 @@ Route::get('/', function(){
 	return view("welcome");
 });
 
-Route::get('home', ['as' => 'home', 'uses' => 'HomeController@index']);
+Route::get('main', ['as' => 'main', 'uses' => 'MainController@getIndex']);
 
 // Authentication routes...
 Route::get('login', ['as' => 'login', 'uses' => 'Auth\AuthController@getLogin']);
@@ -33,3 +33,9 @@ Route::post('password_request', ['as' => 'post_password_request', 'uses' => 'Aut
 // Password reset routes...
 Route::get('password_reset/{token}', ['as' => 'password_reset', 'uses' => 'Auth\PasswordController@getReset']);
 Route::post('password_reset', ['as' => 'post_password_reset', 'uses' => 'Auth\PasswordController@postReset']);
+
+// Maintenance routes...
+Route::get('maintenance', ['as' => 'maintenance', 'uses' => 'MaintenanceController@getIndex']);
+
+
+Route::resource('clients', 'ClientController');

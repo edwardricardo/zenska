@@ -1,8 +1,9 @@
 @extends('layout')
+@section('title', 'Men&uacute Principal')
 @section('content')
 	<section class="col-md-5 panel panel-default mainPanel">
-		<div>					
-			<a href="{{ action('MaintenanceController@getIndex') }}" class="btn btn-default btn-lg btn-block" id="buttonMantenimiento">Mantenimiento</a>
+		<div>
+			{!! link_to_route('maintenance', 'Mantenimiento', $atributes = array(),  ['class' => 'btn btn-default btn-lg btn-block']) !!}
 			<a href="#" class="btn btn-default btn-lg btn-block" id="buttonCaja">Caja</a>
 			<a href="#" class="btn btn-default btn-lg btn-block" id="buttonReportes">Reportes</a>
 		</div>
