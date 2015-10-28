@@ -14,7 +14,8 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('identificator', 9)->unique();
+            $table->string('identificator', 9);
+            $table->unique('identificator');
             $table->string('name', 100);
             $table->string('lastname',100);
             $table->string('mobile',14);
@@ -29,7 +30,7 @@ class CreateClientsTable extends Migration
             $table->date('lastvisit')->nullable();
             $table->string('photo',256)->nullable();
             $table->text('observation')->nullable();
-            $table->string('sendmail', 1)->nullable();
+            $table->enum('sendmail', array('Y','N'))->nullable();
             $table->timestamps();
         });
     }

@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout.layout')
 @section('title', 'Inicio de sesi&oacute;n')
 @section('content')
 <div class="container-fluid">
