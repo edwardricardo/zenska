@@ -107,7 +107,21 @@ return [
     'attributes' => [
         'email' => 'E-Mail',
         'password' => 'Contraseña',
-        'name' => 'Nombre'
+        'name' => 'Nombre',
+        'lastname' => 'Apellido',
+        'identificator' => 'Cédula',
+        'mobile' => 'Teléfono móvil',
+        'address' => 'Dirección',
+        'telephone' => 'Teléfono',
+        'birthday' => 'Fecha de nacimiento',
+        'sex' => 'Sexo',
+        'recommendedby' => 'Recomendado por',
+        'discount' => 'Descuento',
+        'clientsince' => 'Cliente desde',
+        'lastvisit' => 'Última visita',
+        'photo' => 'Foto',
+        'observation' => 'Observación',
+        'sendmail' => 'Enviar correo'
     ],
 
 ];

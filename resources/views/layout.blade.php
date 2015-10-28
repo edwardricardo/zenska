@@ -4,11 +4,12 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Zenska Nails & Hair - @yield('title')</title>
+	<title>Zenska N&H - @yield('title')</title>
 
 	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-	<link rel="stylesheet" href="{{ asset('css/app.css')}}">
+	<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css')}}">
+	<!--<link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css')}}">-->
+	<link rel="stylesheet" href="{{ asset('css/zenska-style.css')}}">
 
 </head>
 <body>
@@ -46,11 +47,13 @@
 	</div>
 </nav>
 
-@yield('content')
+<div class="container">
+	@yield('content')
+</div>
 
 		<!-- Scripts -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-@yield('scripts')
+<script src="{{ asset('js/jquery-2.1.4.min.js')}}"></script>
+<script src="{{ asset('js/bootstrap.min.js')}}"></script>
+
 </body>
 </html>

@@ -1,5 +1,5 @@
 @extends('layout')
-
+@section('title', 'Nuevo usuario')
 @section('content')
 <div class="container-fluid">
     <div class="row">
