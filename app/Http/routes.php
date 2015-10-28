@@ -35,7 +35,7 @@ Route::get('password_reset/{token}', ['as' => 'password_reset', 'uses' => 'Auth\
 Route::post('password_reset', ['as' => 'post_password_reset', 'uses' => 'Auth\PasswordController@postReset']);
 
 // Maintenance routes...
-Route::get('maintenance', ['as' => 'maintenance', 'uses' => 'MaintenanceController@getIndex']);
+Route::get('maintenance', ['middleware' => 'admin.role','as' => 'maintenance', 'uses' => 'MaintenanceController@getIndex']);
 
 
 Route::resource('clients', 'ClientController');
