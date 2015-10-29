@@ -32,12 +32,12 @@ class ClientRequest extends Request
             'address' => 'required|alpha_num',
             'telephone' => 'required|digits:11',
             'birthday' => 'date',
-            'sex' => 'size:1|in:f,m,F,M',
+            'sex' => 'size:1|in:F,M',
             'discount' => 'numeric',
             'clientsince' => 'date',
             'lastvisit' => 'date',
             'observation' => 'alpha_num',
-            'sendmail' => 'size:1|in:s,n,S,N',
+            'sendmail' => 'size:1|in:Y,N',
 
         ];
     }

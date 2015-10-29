@@ -1,40 +1,36 @@
 @extends('layout.layout')
 @section('title', 'Clientes')
 @section('content')
-@include('partials.message')
-    <div class="row">
 
+    <div class="container">
+        @include('partials.message')
         <div class="panel panel-default col-md-12"><h1>Clientes</h1></div>
-
         <table class="table table-bordered table-striped table-hover table-curved table-condensed">
             <thead>
-                <tr>
-                    <th class="col-md-3">Nombre</th>
-                    <th class="col-md-3">Apellido</th>
-                    <th class="col-md-2 text-center">Tel&eacute;fono M&oacute;vil</th>
-                    <th class="col-md-2 text-center">Tel&eacute;fono</th>
-                    <th class="col-md-2 text-center">Opciones</th>
-                </tr>
+            <tr>
+                <th class="col-md-3">Nombre</th>
+                <th class="col-md-3">Apellido</th>
+                <th class="col-md-2 text-center">Tel&eacute;fono M&oacute;vil</th>
+                <th class="col-md-2 text-center">Tel&eacute;fono</th>
+                <th class="col-md-1 text-center">Opciones</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach($clients as $client)
-                    <tr>
-                        <td class="col-md-3">{{$client->name}}</td>
-                        <td class="col-md-3">{{$client->lastname}}</td>
-                        <td class="col-md-2 text-center">{{$client->mobile}}</td>
-                        <td class="col-md-2 text-center">{{$client->telephone}}</td>
-                        <td class="col-md-2 text-center">
-                            <div class="btn-group btn-group-justified" role="group">
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default">Ver</button>
-                                </div>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-default">Modificar</button>
-                                </div>
+            @foreach($clients as $client)
+                <tr>
+                    <td class="col-md-3">{{$client->name}}</td>
+                    <td class="col-md-3">{{$client->lastname}}</td>
+                    <td class="col-md-2 text-center">{{$client->mobile}}</td>
+                    <td class="col-md-2 text-center">{{$client->telephone}}</td>
+                    <td class="col-md-1 text-center">
+                        <div class="btn-group" role="group">
+                            <div class="btn-group" role="group">
+                                {!!  link_to_route('clients.edit', $title = 'Editar', $parameters = ['id' => $client->id], $attributes = ['class' => 'btn btn-primary'])!!}
                             </div>
-                        </td>
-                    </tr>
-                @endforeach
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
         <div class="panel panel-default col-md-12">
