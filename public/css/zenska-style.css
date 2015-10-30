@@ -1,17 +1,47 @@
+body {
+    background-color: #3c3c3c;
+}
+
+.mainDiv {
+    border: 2px solid deeppink;
+    background-color: darkslateblue;
+    border-radius: 10px;
+    box-shadow: mediumpurple 5px 5px 20px;
+    margin-top: 50px;
+}
 .mainPanel{
     padding: 30px;
 }
 
 .mainPanel a{
     height: 60px;
-    margin: 25px 0px;
+    margin: 25px 0;
 }
 
 .secondgroup{
     margin-top: 50px;
 }
 
+.subrayado {
+    border-bottom: 2px solid deeppink;
+    margin-bottom: 20px;
+    color: deeppink;
+    text-shadow: mediumpurple 5px 5px 20px;
+}
 
+table {
+    background-color: mediumpurple;
+}
+
+.form-style {
+    background-color: mediumpurple;
+    padding: 15px 5px;
+    border-radius: 10px;
+}
+
+.buttons-box {
+    margin: 15px 0;
+}
 .table-curved {
     border-collapse: separate;
     border: solid #ddd 1px;

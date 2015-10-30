@@ -113,7 +113,7 @@ return [
         'mobile' => 'Teléfono móvil',
         'address' => 'Dirección',
         'telephone' => 'Teléfono',
-        'birthday' => 'Fecha de nacimiento',
+        'birthday' => 'F. Nacimiento',
         'sex' => 'Sexo',
         'recommendedby' => 'Recomendado por',
         'discount' => 'Descuento',

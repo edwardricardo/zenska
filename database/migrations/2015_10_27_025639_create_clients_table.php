@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateClientsTable extends Migration
 {
@@ -24,13 +24,13 @@ class CreateClientsTable extends Migration
             $table->string('telephone',14)->nullable();
             $table->date('birthday');
             $table->enum('sex', array('F','M'));
-            $table->string('recommendedby', 9)->nullable();
-            $table->integer('discount')->unsigned()->nullable();
+            $table->string('recommendedby', 100)->nullable();
+            $table->integer('discount')->unsigned()->nullable()->default(0);
             $table->date('clientsince')->nullable();
             $table->date('lastvisit')->nullable();
             $table->string('photo',256)->nullable();
             $table->text('observation')->nullable();
-            $table->enum('sendmail', array('Y','N'))->nullable();
+            $table->enum('sendmail', array('Y', 'N'))->nullable()->default('N');
             $table->timestamps();
         });
     }
