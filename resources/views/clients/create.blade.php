@@ -2,15 +2,9 @@
 @section('title', 'Nuevo cliente')
 @section('content')
 
-    <div class="panel panel-default"><h2>Nuevo cliente</h2></div>
+    <div class="col-md-10 col-centered panel panel-default"><h1>Nuevo cliente</h1></div>
     @include('partials/errors')
+    {!! Form::open(['route' => 'clients.store', 'method' => 'post', 'role' => 'form', 'class' => 'col-centered']) !!}
 
-    <div class="container">
-        {!! Form::open(['route' => 'clients.store', 'method' => 'post', 'class' => 'form-horizontal', 'role' => 'form']) !!}
-        @include('partials.client')
-        <div class="form-group">
-            {!! Form::submit('Registrar', ['class' => 'btn btn-primary']) !!}
-        </div>
-        {!! Form::close() !!}
-    </div>
+    {!! Form::close() !!}}
 @endsection

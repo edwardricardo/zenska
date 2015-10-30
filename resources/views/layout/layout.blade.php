@@ -48,7 +48,9 @@
 </nav>
 
 <div class="container">
-	@yield('content')
+	<div class="row row-centered">
+		@yield('content')
+	</div>
 </div>
 
 		<!-- Scripts -->

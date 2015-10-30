@@ -1,7 +1,8 @@
 @extends('layout.layout')
 @section('title', 'Men&uacute Principal')
 @section('content')
-	<section class="col-md-5 panel panel-default mainPanel">
+
+	<section class="col-md-4 col-centered mainPanel">
 		<div>
 			{!! link_to_route('maintenance', 'Mantenimiento', $atributes = array(),  ['class' => 'btn btn-default btn-lg btn-block']) !!}
 			<a href="#" class="btn btn-default btn-lg btn-block" id="buttonCaja">Caja</a>
@@ -13,7 +14,8 @@
 			<a href="#" class="btn btn-default btn-lg btn-block" id="buttonBonos">Bonos</a>
 		</div>
 	</section>			
-	<section class="col-md-5 col-md-offset-2 panel panel-default mainPanel">
+
+	<section class="col-md-4 col-centered mainPanel">
 		<div>
 			<a href="#" class="btn btn-default btn-lg btn-block" id="buttonMantenimiento">Configuración</a>
 			<a href="#" class="btn btn-default btn-lg btn-block" id="buttonCaja">Acerca de...</a>
