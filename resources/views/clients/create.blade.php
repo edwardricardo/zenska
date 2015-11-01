@@ -6,7 +6,7 @@
     @include('partials/errors')
     <div class="col-md-12 col-centered" style="padding: 0;">
         {!! Form::open(['route' => 'clients.store', 'method' => 'post', 'role' => 'form', 'class' => 'col-centered form-style']) !!}
-        @include('partials.client')
+        @include('clients.partials.client')
     </div>
     <div class="col-md-10 col-centered buttons-box" style="padding: 0;">
         {!! Form::submit('Guardar', ['class' => 'btn btn-primary']) !!}

@@ -20,6 +20,9 @@
                 <td colspan="3">{!! link_to_route('clients.create', 'Nuevo cliente', $atributes = array(),  ['class' => 'btn btn-primary']) !!}</td>
                 <td colspan="2">{!! link_to_route('maintenance', 'Atras', $atributes = array(),  ['class' => 'btn btn-success btn-block']) !!}</td>
             </tr>
+            <tr>
+                <td colspan="5" style="text-align: center;">{!! $clients->render() !!}</td>
+            </tr>
             </tfoot>
                 <tbody>
                 @foreach($clients as $client)
@@ -31,7 +34,7 @@
                         <td class="col-md-1 text-center">
                             <div class="btn-group" role="group">
                                 <div class="btn-group" role="group">
-                                    {!!  link_to_route('clients.edit', $title = 'Editar', $parameters = ['id' => $client->id], $attributes = ['class' => 'btn btn-primary'])!!}
+                                    {!!  link_to_route('clients.edit', $title = 'Ver', $parameters = ['id' => $client->id], $attributes = ['class' => 'btn btn-primary btn-sm'])!!}
                                 </div>
                             </div>
                         </td>
@@ -40,8 +43,5 @@
 
                 </tbody>
             </table>
-        <div class="col-md-10 col-centered" style="padding:0;">
-            {!! $clients->render() !!}
-        </div>
     </div>
 @endsection

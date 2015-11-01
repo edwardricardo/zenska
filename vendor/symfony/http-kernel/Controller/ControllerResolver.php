@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  * the controller method arguments.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class ControllerResolver implements ControllerResolverInterface
 {
@@ -44,8 +42,6 @@ class ControllerResolver implements ControllerResolverInterface
      *
      * This method looks for a '_controller' request attribute that represents
      * the controller name (a string like ClassName::MethodName).
-     *
-     * @api
      */
     public function getController(Request $request)
     {
@@ -87,9 +83,43 @@ class ControllerResolver implements ControllerResolverInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns an instantiated controller.
      *
-     * @api
+     * @param string $class A class name
+     *
+     * @return object
+     */
+    protected function instantiateController($class)
+    {
+        return new $class();
+    }
+
+    /**
+     * Returns a callable for the given controller.
+     *
+     * @param string $controller A Controller string
+     *
+     * @return callable A PHP callable
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function createController($controller)
+    {
+        if (false === strpos($controller, '::')) {
+            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
+        }
+
+        list($class, $method) = explode('::', $controller, 2);
+
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        }
+
+        return array($this->instantiateController($class), $method);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getArguments(Request $request, $controller)
     {
@@ -130,41 +160,5 @@ class ControllerResolver implements ControllerResolverInterface
         }
 
         return $arguments;
-    }
-
-    /**
-     * Returns a callable for the given controller.
-     *
-     * @param string $controller A Controller string
-     *
-     * @return mixed A PHP callable
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function createController($controller)
-    {
-        if (false === strpos($controller, '::')) {
-            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
-        }
-
-        list($class, $method) = explode('::', $controller, 2);
-
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
-        }
-
-        return array($this->instantiateController($class), $method);
-    }
-
-    /**
-     * Returns an instantiated controller.
-     *
-     * @param string $class A class name
-     *
-     * @return object
-     */
-    protected function instantiateController($class)
-    {
-        return new $class();
     }
 }

@@ -13,6 +13,10 @@ namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler;
 
+/**
+ * @requires extension memcached
+ * @group time-sensitive
+ */
 class MemcachedSessionHandlerTest extends \PHPUnit_Framework_TestCase
 {
     const PREFIX = 'prefix_';
@@ -24,29 +28,6 @@ class MemcachedSessionHandlerTest extends \PHPUnit_Framework_TestCase
     protected $storage;
 
     protected $memcached;
-
-    protected function setUp()
-    {
-        if (!class_exists('Memcached')) {
-            $this->markTestSkipped('Skipped tests Memcached class is not present');
-        }
-
-        if (version_compare(phpversion('memcached'), '2.2.0', '>=')) {
-            $this->markTestSkipped('Tests can only be run with memcached extension 2.1.0 or lower');
-        }
-
-        $this->memcached = $this->getMock('Memcached');
-        $this->storage = new MemcachedSessionHandler(
-            $this->memcached,
-            array('prefix' => self::PREFIX, 'expiretime' => self::TTL)
-        );
-    }
-
-    protected function tearDown()
-    {
-        $this->memcached = null;
-        $this->storage = null;
-    }
 
     public function testOpenSession()
     {
@@ -127,5 +108,27 @@ class MemcachedSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $this->assertInstanceOf('\Memcached', $method->invoke($this->storage));
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        if (version_compare(phpversion('memcached'), '2.2.0', '>=')) {
+            $this->markTestSkipped('Tests can only be run with memcached extension 2.1.0 or lower');
+        }
+
+        $this->memcached = $this->getMock('Memcached');
+        $this->storage = new MemcachedSessionHandler(
+            $this->memcached,
+            array('prefix' => self::PREFIX, 'expiretime' => self::TTL)
+        );
+    }
+
+    protected function tearDown()
+    {
+        $this->memcached = null;
+        $this->storage = null;
+        parent::tearDown();
     }
 }

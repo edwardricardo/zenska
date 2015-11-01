@@ -11,19 +11,19 @@
 
 namespace Symfony\Component\HttpKernel\Tests\HttpCache;
 
-use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class TestMultipleHttpKernel extends HttpKernel implements ControllerResolverInterface
 {
     protected $bodies = array();
     protected $statuses = array();
     protected $headers = array();
-    protected $call = false;
+    protected $called = false;
     protected $backendRequest;
 
     public function __construct($responses)
@@ -75,6 +75,6 @@ class TestMultipleHttpKernel extends HttpKernel implements ControllerResolverInt
 
     public function reset()
     {
-        $this->call = false;
+        $this->called = false;
     }
 }

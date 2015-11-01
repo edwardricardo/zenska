@@ -73,25 +73,6 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Load the standard routes file for the application.
-     *
-     * @param  string  $path
-     * @return void
-     */
-    protected function loadRoutesFrom($path)
-    {
-        $router = $this->app['Illuminate\Routing\Router'];
-
-        if (is_null($this->namespace)) {
-            return require $path;
-        }
-
-        $router->group(['namespace' => $this->namespace], function ($router) use ($path) {
-            require $path;
-        });
-    }
-
-    /**
      * Register the service provider.
      *
      * @return void
@@ -111,5 +92,24 @@ class RouteServiceProvider extends ServiceProvider
     public function __call($method, $parameters)
     {
         return call_user_func_array([$this->app['router'], $method], $parameters);
+    }
+
+    /**
+     * Load the standard routes file for the application.
+     *
+     * @param  string $path
+     * @return mixed
+     */
+    protected function loadRoutesFrom($path)
+    {
+        $router = $this->app['Illuminate\Routing\Router'];
+
+        if (is_null($this->namespace)) {
+            return require $path;
+        }
+
+        $router->group(['namespace' => $this->namespace], function ($router) use ($path) {
+            require $path;
+        });
     }
 }

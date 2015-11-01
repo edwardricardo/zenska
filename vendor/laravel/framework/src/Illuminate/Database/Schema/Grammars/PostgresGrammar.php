@@ -2,8 +2,8 @@
 
 namespace Illuminate\Database\Schema\Grammars;
 
-use Illuminate\Support\Fluent;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Fluent;
 
 class PostgresGrammar extends Grammar
 {
@@ -499,6 +499,17 @@ class PostgresGrammar extends Grammar
     protected function typeBinary(Fluent $column)
     {
         return 'bytea';
+    }
+
+    /**
+     * Create the column definition for a uuid type.
+     *
+     * @param  \Illuminate\Support\Fluent $column
+     * @return string
+     */
+    protected function typeUuid(Fluent $column)
+    {
+        return 'uuid';
     }
 
     /**

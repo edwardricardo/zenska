@@ -45,11 +45,22 @@ class ClassFinder
     }
 
     /**
+     * Determine if the given token is a namespace keyword.
+     *
+     * @param  array|string $token
+     * @return bool
+     */
+    protected function tokenIsNamespace($token)
+    {
+        return is_array($token) && $token[0] == T_NAMESPACE;
+    }
+
+    /**
      * Find the namespace in the tokens starting at a given key.
      *
      * @param  int  $key
      * @param  array  $tokens
-     * @return string
+     * @return string|null
      */
     protected function getNamespace($key, array $tokens)
     {
@@ -67,36 +78,14 @@ class ClassFinder
     }
 
     /**
-     * Find the class in the tokens starting at a given key.
-     *
-     * @param  int  $key
-     * @param  array  $tokens
-     * @return string
-     */
-    protected function getClass($key, array $tokens)
-    {
-        $class = null;
-
-        $tokenCount = count($tokens);
-
-        for ($i = $key; $i < $tokenCount; $i++) {
-            if ($this->isPartOfClass($tokens[$i])) {
-                $class .= $tokens[$i][1];
-            } elseif ($this->isWhitespace($tokens[$i])) {
-                return $class;
-            }
-        }
-    }
-
-    /**
-     * Determine if the given token is a namespace keyword.
+     * Determine if the given token is part of the namespace.
      *
      * @param  array|string  $token
      * @return bool
      */
-    protected function tokenIsNamespace($token)
+    protected function isPartOfNamespace($token)
     {
-        return is_array($token) && $token[0] == T_NAMESPACE;
+        return is_array($token) && ($token[0] == T_STRING || $token[0] == T_NS_SEPARATOR);
     }
 
     /**
@@ -111,14 +100,25 @@ class ClassFinder
     }
 
     /**
-     * Determine if the given token is part of the namespace.
+     * Find the class in the tokens starting at a given key.
      *
-     * @param  array|string  $token
-     * @return bool
+     * @param  int $key
+     * @param  array $tokens
+     * @return string|null
      */
-    protected function isPartOfNamespace($token)
+    protected function getClass($key, array $tokens)
     {
-        return is_array($token) && ($token[0] == T_STRING || $token[0] == T_NS_SEPARATOR);
+        $class = null;
+
+        $tokenCount = count($tokens);
+
+        for ($i = $key; $i < $tokenCount; $i++) {
+            if ($this->isPartOfClass($tokens[$i])) {
+                $class .= $tokens[$i][1];
+            } elseif ($this->isWhitespace($tokens[$i])) {
+                return $class;
+            }
+        }
     }
 
     /**

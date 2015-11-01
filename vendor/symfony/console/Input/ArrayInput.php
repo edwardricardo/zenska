@@ -19,8 +19,6 @@ namespace Symfony\Component\Console\Input;
  *     $input = new ArrayInput(array('name' => 'foo', '--bar' => 'foobar'));
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class ArrayInput extends Input
 {
@@ -31,8 +29,6 @@ class ArrayInput extends Input
      *
      * @param array           $parameters An array of parameters
      * @param InputDefinition $definition A InputDefinition instance
-     *
-     * @api
      */
     public function __construct(array $parameters, InputDefinition $definition = null)
     {
@@ -148,23 +144,6 @@ class ArrayInput extends Input
     }
 
     /**
-     * Adds a short option value.
-     *
-     * @param string $shortcut The short option key
-     * @param mixed  $value    The value for the option
-     *
-     * @throws \InvalidArgumentException When option given doesn't exist
-     */
-    private function addShortOption($shortcut, $value)
-    {
-        if (!$this->definition->hasShortcut($shortcut)) {
-            throw new \InvalidArgumentException(sprintf('The "-%s" option does not exist.', $shortcut));
-        }
-
-        $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
-    }
-
-    /**
      * Adds a long option value.
      *
      * @param string $name  The long option key
@@ -190,6 +169,23 @@ class ArrayInput extends Input
         }
 
         $this->options[$name] = $value;
+    }
+
+    /**
+     * Adds a short option value.
+     *
+     * @param string $shortcut The short option key
+     * @param mixed $value The value for the option
+     *
+     * @throws \InvalidArgumentException When option given doesn't exist
+     */
+    private function addShortOption($shortcut, $value)
+    {
+        if (!$this->definition->hasShortcut($shortcut)) {
+            throw new \InvalidArgumentException(sprintf('The "-%s" option does not exist.', $shortcut));
+        }
+
+        $this->addLongOption($this->definition->getOptionForShortcut($shortcut)->getName(), $value);
     }
 
     /**

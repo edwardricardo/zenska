@@ -109,10 +109,12 @@ return [
         'password' => 'Contraseña',
         'name' => 'Nombre',
         'lastname' => 'Apellido',
-        'identificator' => 'Cédula',
+        'identificator' => 'Cédula/Rif',
+        'rif' => 'RIF',
         'mobile' => 'Teléfono móvil',
         'address' => 'Dirección',
         'telephone' => 'Teléfono',
+        'fax' => 'Fax',
         'birthday' => 'F. Nacimiento',
         'sex' => 'Sexo',
         'recommendedby' => 'Recomendado por',
@@ -121,7 +123,13 @@ return [
         'lastvisit' => 'Última visita',
         'photo' => 'Foto',
         'observation' => 'Observación',
-        'sendmail' => 'Enviar correo'
+        'sendmail' => 'Enviar correo',
+        'employeesince' => 'Empleado desde',
+        'payment' => 'Forma de pago',
+        'url' => 'Sitio web',
+        'contact' => 'Persona de contacto',
+        'bank' => 'Banco',
+        'bank_account' => 'Número de cuenta'
     ],
 
 ];

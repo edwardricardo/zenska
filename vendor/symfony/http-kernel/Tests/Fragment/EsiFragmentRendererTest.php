@@ -11,24 +11,29 @@
 
 namespace Symfony\Component\HttpKernel\Tests\Fragment;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\EsiFragmentRenderer;
 use Symfony\Component\HttpKernel\HttpCache\Esi;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\UriSigner;
 
 class EsiFragmentRendererTest extends \PHPUnit_Framework_TestCase
 {
-    public function testRenderFallbackToInlineStrategyIfNoRequest()
+    public function testRenderFallbackToInlineStrategyIfEsiNotSupported()
     {
         $strategy = new EsiFragmentRenderer(new Esi(), $this->getInlineStrategy(true));
         $strategy->render('/', Request::create('/'));
     }
 
-    public function testRenderFallbackToInlineStrategyIfEsiNotSupported()
+    private function getInlineStrategy($called = false)
     {
-        $strategy = new EsiFragmentRenderer(new Esi(), $this->getInlineStrategy(true));
-        $strategy->render('/', Request::create('/'));
+        $inline = $this->getMockBuilder('Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer')->disableOriginalConstructor()->getMock();
+
+        if ($called) {
+            $inline->expects($this->once())->method('render');
+        }
+
+        return $inline;
     }
 
     public function testRender()
@@ -88,16 +93,5 @@ class EsiFragmentRendererTest extends \PHPUnit_Framework_TestCase
         $request->headers->set('Surrogate-Capability', 'ESI/1.0');
 
         $strategy->render('/', $request, array('alt' => new ControllerReference('alt_controller')));
-    }
-
-    private function getInlineStrategy($called = false)
-    {
-        $inline = $this->getMockBuilder('Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer')->disableOriginalConstructor()->getMock();
-
-        if ($called) {
-            $inline->expects($this->once())->method('render');
-        }
-
-        return $inline;
     }
 }

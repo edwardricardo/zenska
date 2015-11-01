@@ -39,3 +39,5 @@ Route::get('maintenance', ['as' => 'maintenance', 'uses' => 'MaintenanceControll
 
 
 Route::resource('clients', 'ClientController');
+Route::resource('employees', 'EmployeeController');
+Route::resource('providers', 'ProductProviderController');

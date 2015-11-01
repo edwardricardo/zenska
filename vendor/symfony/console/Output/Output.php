@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\Console\Output;
 
-use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 
 /**
  * Base class for output classes.
@@ -26,8 +26,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
  *  * quiet: -q (no output)
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 abstract class Output implements OutputInterface
 {
@@ -40,8 +38,6 @@ abstract class Output implements OutputInterface
      * @param int                           $verbosity The verbosity level (one of the VERBOSITY constants in OutputInterface)
      * @param bool                          $decorated Whether to decorate messages
      * @param OutputFormatterInterface|null $formatter Output formatter instance (null to use default OutputFormatter)
-     *
-     * @api
      */
     public function __construct($verbosity = self::VERBOSITY_NORMAL, $decorated = false, OutputFormatterInterface $formatter = null)
     {
@@ -53,17 +49,17 @@ abstract class Output implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function setFormatter(OutputFormatterInterface $formatter)
+    public function getFormatter()
     {
-        $this->formatter = $formatter;
+        return $this->formatter;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFormatter()
+    public function setFormatter(OutputFormatterInterface $formatter)
     {
-        return $this->formatter;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -85,17 +81,17 @@ abstract class Output implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function setVerbosity($level)
+    public function getVerbosity()
     {
-        $this->verbosity = (int) $level;
+        return $this->verbosity;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getVerbosity()
+    public function setVerbosity($level)
     {
-        return $this->verbosity;
+        $this->verbosity = (int)$level;
     }
 
     public function isQuiet()

@@ -115,12 +115,11 @@ EOTXT
         );
     }
 
+    /**
+     * @requires extension xml
+     */
     public function testXmlResource()
     {
-        if (!extension_loaded('xml')) {
-            $this->markTestSkipped('xml extension is required');
-        }
-
         $var = xml_parser_create();
 
         $this->assertDumpMatchesFormat(
@@ -257,13 +256,10 @@ EOTXT
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     * @requires PHP 5.6
      */
     public function testSpecialVars56()
     {
-        if (PHP_VERSION_ID < 50600) {
-            $this->markTestSkipped('PHP 5.6 is required');
-        }
-
         $var = $this->getSpecialVars();
 
         $this->assertDumpEquals(
@@ -285,6 +281,24 @@ EOTXT
             ,
             $var
         );
+    }
+
+    private function getSpecialVars()
+    {
+        foreach (array_keys($GLOBALS) as $var) {
+            if ('GLOBALS' !== $var) {
+                unset($GLOBALS[$var]);
+            }
+        }
+
+        $var = function &() {
+            $var = array();
+            $var[] = &$var;
+
+            return $var;
+        };
+
+        return array($var(), $GLOBALS, &$GLOBALS);
     }
 
     /**
@@ -368,23 +382,5 @@ EOTXT
             ,
             $out
         );
-    }
-
-    private function getSpecialVars()
-    {
-        foreach (array_keys($GLOBALS) as $var) {
-            if ('GLOBALS' !== $var) {
-                unset($GLOBALS[$var]);
-            }
-        }
-
-        $var = function &() {
-            $var = array();
-            $var[] = &$var;
-
-            return $var;
-        };
-
-        return array($var(), $GLOBALS, &$GLOBALS);
     }
 }

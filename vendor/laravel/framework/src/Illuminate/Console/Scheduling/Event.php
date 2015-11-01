@@ -2,15 +2,15 @@
 
 namespace Illuminate\Console\Scheduling;
 
-use Closure;
 use Carbon\Carbon;
-use LogicException;
+use Closure;
 use Cron\CronExpression;
 use GuzzleHttp\Client as HttpClient;
-use Illuminate\Contracts\Mail\Mailer;
-use Symfony\Component\Process\Process;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Mail\Mailer;
+use LogicException;
+use Symfony\Component\Process\Process;
 
 class Event
 {
@@ -62,48 +62,48 @@ class Event
      * @var bool
      */
     public $withoutOverlapping = false;
-
-    /**
-     * The filter callback.
-     *
-     * @var \Closure
-     */
-    protected $filter;
-
-    /**
-     * The reject callback.
-     *
-     * @var \Closure
-     */
-    protected $reject;
-
     /**
      * The location that output should be sent to.
      *
      * @var string
      */
     public $output = '/dev/null';
-
-    /**
-     * The array of callbacks to be run before the event is started.
-     *
-     * @var array
-     */
-    protected $beforeCallbacks = [];
-
-    /**
-     * The array of callbacks to be run after the event is finished.
-     *
-     * @var array
-     */
-    protected $afterCallbacks = [];
-
     /**
      * The human readable description of the event.
      *
      * @var string
      */
     public $description;
+    /**
+     * The filter callback.
+     *
+     * @var \Closure
+     */
+    protected $filter;
+    /**
+     * The reject callback.
+     *
+     * @var \Closure
+     */
+    protected $reject;
+    /**
+     * Indicates whether output should be appended.
+     *
+     * @var bool
+     */
+    protected $shouldAppendOutput = false;
+    /**
+     * The array of callbacks to be run before the event is started.
+     *
+     * @var array
+     */
+    protected $beforeCallbacks = [];
+    /**
+     * The array of callbacks to be run after the event is finished.
+     *
+     * @var array
+     */
+    protected $afterCallbacks = [];
 
     /**
      * Create a new event instance.
@@ -124,7 +124,7 @@ class Event
      */
     protected function getDefaultOutput()
     {
-        return (strpos(strtoupper(PHP_OS), 'WIN') === 0) ? 'NUL' : '/dev/null';
+        return (DIRECTORY_SEPARATOR == '\\') ? 'NUL' : '/dev/null';
     }
 
     /**
@@ -140,18 +140,6 @@ class Event
         } else {
             $this->runCommandInBackground();
         }
-    }
-
-    /**
-     * Run the command in the background using exec.
-     *
-     * @return void
-     */
-    protected function runCommandInBackground()
-    {
-        chdir(base_path());
-
-        exec($this->buildCommand());
     }
 
     /**
@@ -185,29 +173,18 @@ class Event
     }
 
     /**
-     * Call all of the "after" callbacks for the event.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $container
-     * @return void
-     */
-    protected function callAfterCallbacks(Container $container)
-    {
-        foreach ($this->afterCallbacks as $callback) {
-            $container->call($callback);
-        }
-    }
-
-    /**
      * Build the comand string.
      *
      * @return string
      */
     public function buildCommand()
     {
+        $redirect = $this->shouldAppendOutput ? ' >> ' : ' > ';
+
         if ($this->withoutOverlapping) {
-            $command = '(touch '.$this->mutexPath().'; '.$this->command.'; rm '.$this->mutexPath().') > '.$this->output.' 2>&1 &';
+            $command = '(touch ' . $this->mutexPath() . '; ' . $this->command . '; rm ' . $this->mutexPath() . ')' . $redirect . $this->output . ' 2>&1 &';
         } else {
-            $command = $this->command.' > '.$this->output.' 2>&1 &';
+            $command = $this->command . $redirect . $this->output . ' 2>&1 &';
         }
 
         return $this->user ? 'sudo -u '.$this->user.' '.$command : $command;
@@ -221,6 +198,31 @@ class Event
     protected function mutexPath()
     {
         return storage_path('framework/schedule-'.md5($this->expression.$this->command));
+    }
+
+    /**
+     * Call all of the "after" callbacks for the event.
+     *
+     * @param  \Illuminate\Contracts\Container\Container $container
+     * @return void
+     */
+    protected function callAfterCallbacks(Container $container)
+    {
+        foreach ($this->afterCallbacks as $callback) {
+            $container->call($callback);
+        }
+    }
+
+    /**
+     * Run the command in the background using exec.
+     *
+     * @return void
+     */
+    protected function runCommandInBackground()
+    {
+        chdir(base_path());
+
+        exec($this->buildCommand());
     }
 
     /**
@@ -238,6 +240,16 @@ class Event
         return $this->expressionPasses() &&
                $this->filtersPass($app) &&
                $this->runsInEnvironment($app->environment());
+    }
+
+    /**
+     * Determine if the event runs in maintenance mode.
+     *
+     * @return bool
+     */
+    public function runsInMaintenanceMode()
+    {
+        return $this->evenInMaintenanceMode;
     }
 
     /**
@@ -284,13 +296,13 @@ class Event
     }
 
     /**
-     * Determine if the event runs in maintenance mode.
+     * Schedule the event to run hourly.
      *
-     * @return bool
+     * @return $this
      */
-    public function runsInMaintenanceMode()
+    public function hourly()
     {
-        return $this->evenInMaintenanceMode;
+        return $this->cron('0 * * * * *');
     }
 
     /**
@@ -304,16 +316,6 @@ class Event
         $this->expression = $expression;
 
         return $this;
-    }
-
-    /**
-     * Schedule the event to run hourly.
-     *
-     * @return $this
-     */
-    public function hourly()
-    {
-        return $this->cron('0 * * * * *');
     }
 
     /**
@@ -352,6 +354,22 @@ class Event
     }
 
     /**
+     * Splice the given value into the given position of the expression.
+     *
+     * @param  int $position
+     * @param  string $value
+     * @return $this
+     */
+    protected function spliceIntoPosition($position, $value)
+    {
+        $segments = explode(' ', $this->expression);
+
+        $segments[$position - 1] = $value;
+
+        return $this->cron(implode(' ', $segments));
+    }
+
+    /**
      * Schedule the event to run twice daily.
      *
      * @param  int  $first
@@ -384,6 +402,19 @@ class Event
     public function mondays()
     {
         return $this->days(1);
+    }
+
+    /**
+     * Set the days of the week the command should run on.
+     *
+     * @param  array|mixed $days
+     * @return $this
+     */
+    public function days($days)
+    {
+        $days = is_array($days) ? $days : func_get_args();
+
+        return $this->spliceIntoPosition(5, implode(',', $days));
     }
 
     /**
@@ -531,19 +562,6 @@ class Event
     }
 
     /**
-     * Set the days of the week the command should run on.
-     *
-     * @param  array|mixed  $days
-     * @return $this
-     */
-    public function days($days)
-    {
-        $days = is_array($days) ? $days : func_get_args();
-
-        return $this->spliceIntoPosition(5, implode(',', $days));
-    }
-
-    /**
      * Set the timezone the date should be evaluated on.
      *
      * @param  \DateTimeZone|string  $timezone
@@ -614,9 +632,9 @@ class Event
      * @param  \Closure  $callback
      * @return $this
      */
-    public function when(Closure $callback)
+    public function skip(Closure $callback)
     {
-        $this->filter = $callback;
+        $this->reject = $callback;
 
         return $this;
     }
@@ -627,22 +645,36 @@ class Event
      * @param  \Closure  $callback
      * @return $this
      */
-    public function skip(Closure $callback)
+    public function when(Closure $callback)
     {
-        $this->reject = $callback;
+        $this->filter = $callback;
 
         return $this;
+    }
+
+    /**
+     * Append the output of the command to a given location.
+     *
+     * @param  string $location
+     * @return $this
+     */
+    public function appendOutputTo($location)
+    {
+        return $this->sendOutputTo($location, true);
     }
 
     /**
      * Send the output of the command to a given location.
      *
      * @param  string  $location
+     * @param  bool $append
      * @return $this
      */
-    public function sendOutputTo($location)
+    public function sendOutputTo($location, $append = false)
     {
         $this->output = $location;
+
+        $this->shouldAppendOutput = $append;
 
         return $this;
     }
@@ -666,6 +698,19 @@ class Event
         return $this->then(function (Mailer $mailer) use ($addresses) {
             $this->emailOutput($mailer, $addresses);
         });
+    }
+
+    /**
+     * Register a callback to be called after the operation.
+     *
+     * @param  \Closure $callback
+     * @return $this
+     */
+    public function then(Closure $callback)
+    {
+        $this->afterCallbacks[] = $callback;
+
+        return $this;
     }
 
     /**
@@ -747,19 +792,6 @@ class Event
     }
 
     /**
-     * Register a callback to be called after the operation.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function then(Closure $callback)
-    {
-        $this->afterCallbacks[] = $callback;
-
-        return $this;
-    }
-
-    /**
      * Set the human-friendly description of the event.
      *
      * @param  string  $description
@@ -781,22 +813,6 @@ class Event
         $this->description = $description;
 
         return $this;
-    }
-
-    /**
-     * Splice the given value into the given position of the expression.
-     *
-     * @param  int  $position
-     * @param  string  $value
-     * @return $this
-     */
-    protected function spliceIntoPosition($position, $value)
-    {
-        $segments = explode(' ', $this->expression);
-
-        $segments[$position - 1] = $value;
-
-        return $this->cron(implode(' ', $segments));
     }
 
     /**

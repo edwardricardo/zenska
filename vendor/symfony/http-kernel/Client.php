@@ -12,11 +12,11 @@
 namespace Symfony\Component\HttpKernel;
 
 use Symfony\Component\BrowserKit\Client as BaseClient;
+use Symfony\Component\BrowserKit\Cookie as DomCookie;
+use Symfony\Component\BrowserKit\CookieJar;
+use Symfony\Component\BrowserKit\History;
 use Symfony\Component\BrowserKit\Request as DomRequest;
 use Symfony\Component\BrowserKit\Response as DomResponse;
-use Symfony\Component\BrowserKit\Cookie as DomCookie;
-use Symfony\Component\BrowserKit\History;
-use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  * Client simulates a browser and makes requests to a Kernel object.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class Client extends BaseClient
 {

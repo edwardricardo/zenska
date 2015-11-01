@@ -13,6 +13,10 @@ namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcacheSessionHandler;
 
+/**
+ * @requires extension memcache
+ * @group time-sensitive
+ */
 class MemcacheSessionHandlerTest extends \PHPUnit_Framework_TestCase
 {
     const PREFIX = 'prefix_';
@@ -23,25 +27,6 @@ class MemcacheSessionHandlerTest extends \PHPUnit_Framework_TestCase
     protected $storage;
 
     protected $memcache;
-
-    protected function setUp()
-    {
-        if (!class_exists('Memcache')) {
-            $this->markTestSkipped('Skipped tests Memcache class is not present');
-        }
-
-        $this->memcache = $this->getMock('Memcache');
-        $this->storage = new MemcacheSessionHandler(
-            $this->memcache,
-            array('prefix' => self::PREFIX, 'expiretime' => self::TTL)
-        );
-    }
-
-    protected function tearDown()
-    {
-        $this->memcache = null;
-        $this->storage = null;
-    }
 
     public function testOpenSession()
     {
@@ -128,5 +113,22 @@ class MemcacheSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $this->assertInstanceOf('\Memcache', $method->invoke($this->storage));
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->memcache = $this->getMock('Memcache');
+        $this->storage = new MemcacheSessionHandler(
+            $this->memcache,
+            array('prefix' => self::PREFIX, 'expiretime' => self::TTL)
+        );
+    }
+
+    protected function tearDown()
+    {
+        $this->memcache = null;
+        $this->storage = null;
+        parent::tearDown();
     }
 }

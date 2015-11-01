@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\Component\Console\Tests\Style;
 
 use PHPUnit_Framework_TestCase;
@@ -15,18 +24,6 @@ class SymfonyStyleTest extends PHPUnit_Framework_TestCase
     protected $command;
     /** @var CommandTester */
     protected $tester;
-
-    protected function setUp()
-    {
-        $this->command = new Command('sfstyle');
-        $this->tester = new CommandTester($this->command);
-    }
-
-    protected function tearDown()
-    {
-        $this->command = null;
-        $this->tester = null;
-    }
 
     /**
      * @dataProvider inputCommandToOutputFilesProvider
@@ -53,12 +50,40 @@ class SymfonyStyleTest extends PHPUnit_Framework_TestCase
         $maxLineLength = SymfonyStyle::MAX_LINE_LENGTH - 3;
 
         $this->command->setCode(function (InputInterface $input, OutputInterface $output) use ($word) {
-            $sfStyle = new SymfonyStyle($input, $output);
+            $sfStyle = new SymfonyStyleWithForcedLineLength($input, $output);
             $sfStyle->block($word, 'CUSTOM', 'fg=white;bg=blue', ' § ', false);
         });
 
         $this->tester->execute(array(), array('interactive' => false, 'decorated' => false));
         $expectedCount = (int) ceil($wordLength / ($maxLineLength)) + (int) ($wordLength > $maxLineLength - 5);
         $this->assertSame($expectedCount, substr_count($this->tester->getDisplay(true), ' § '));
+    }
+
+    protected function setUp()
+    {
+        $this->command = new Command('sfstyle');
+        $this->tester = new CommandTester($this->command);
+    }
+
+    protected function tearDown()
+    {
+        $this->command = null;
+        $this->tester = null;
+    }
+}
+
+/**
+ * Use this class in tests to force the line length
+ * and ensure a consistent output for expectations.
+ */
+class SymfonyStyleWithForcedLineLength extends SymfonyStyle
+{
+    public function __construct(InputInterface $input, OutputInterface $output)
+    {
+        parent::__construct($input, $output);
+
+        $ref = new \ReflectionProperty(get_parent_class($this), 'lineLength');
+        $ref->setAccessible(true);
+        $ref->setValue($this, 120);
     }
 }

@@ -13,41 +13,13 @@ namespace Symfony\Component\HttpFoundation\Tests\Session\Storage\Handler;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
+/**
+ * @requires extension pdo_sqlite
+ * @group time-sensitive
+ */
 class PdoSessionHandlerTest extends \PHPUnit_Framework_TestCase
 {
     private $dbFile;
-
-    protected function setUp()
-    {
-        if (!class_exists('PDO') || !in_array('sqlite', \PDO::getAvailableDrivers())) {
-            $this->markTestSkipped('This test requires SQLite support in your environment');
-        }
-    }
-
-    protected function tearDown()
-    {
-        // make sure the temporary database file is deleted when it has been created (even when a test fails)
-        if ($this->dbFile) {
-            @unlink($this->dbFile);
-        }
-    }
-
-    protected function getPersistentSqliteDsn()
-    {
-        $this->dbFile = tempnam(sys_get_temp_dir(), 'sf2_sqlite_sessions');
-
-        return 'sqlite:'.$this->dbFile;
-    }
-
-    protected function getMemorySqlitePdo()
-    {
-        $pdo = new \PDO('sqlite::memory:');
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $storage = new PdoSessionHandler($pdo);
-        $storage->createTable();
-
-        return $pdo;
-    }
 
     /**
      * @expectedException \InvalidArgumentException
@@ -58,6 +30,16 @@ class PdoSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
 
         $storage = new PdoSessionHandler($pdo);
+    }
+
+    protected function getMemorySqlitePdo()
+    {
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $storage = new PdoSessionHandler($pdo);
+        $storage->createTable();
+
+        return $pdo;
     }
 
     /**
@@ -97,6 +79,13 @@ class PdoSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $data = $storage->read('id');
         $storage->close();
         $this->assertSame('data', $data, 'Written value can be read back correctly');
+    }
+
+    protected function getPersistentSqliteDsn()
+    {
+        $this->dbFile = tempnam(sys_get_temp_dir(), 'sf2_sqlite_sessions');
+
+        return 'sqlite:' . $this->dbFile;
     }
 
     public function testWithLazySavePathConnection()
@@ -150,6 +139,15 @@ class PdoSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $result = $storage->read('foo');
 
         $this->assertSame($content, $result);
+    }
+
+    private function createStream($content)
+    {
+        $stream = tmpfile();
+        fwrite($stream, $content);
+        fseek($stream, 0);
+
+        return $stream;
     }
 
     public function testReadLockedConvertsStreamToString()
@@ -311,13 +309,13 @@ class PdoSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\PDO', $method->invoke($storage));
     }
 
-    private function createStream($content)
+    protected function tearDown()
     {
-        $stream = tmpfile();
-        fwrite($stream, $content);
-        fseek($stream, 0);
-
-        return $stream;
+        // make sure the temporary database file is deleted when it has been created (even when a test fails)
+        if ($this->dbFile) {
+            @unlink($this->dbFile);
+        }
+        parent::tearDown();
     }
 }
 

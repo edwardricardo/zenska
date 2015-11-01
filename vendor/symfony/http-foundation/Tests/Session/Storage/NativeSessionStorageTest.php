@@ -33,24 +33,12 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
 {
     private $savePath;
 
-    protected function setUp()
+    public function testBag()
     {
-        $this->iniSet('session.save_handler', 'files');
-        $this->iniSet('session.save_path', $this->savePath = sys_get_temp_dir().'/sf2test');
-        if (!is_dir($this->savePath)) {
-            mkdir($this->savePath);
-        }
-    }
-
-    protected function tearDown()
-    {
-        session_write_close();
-        array_map('unlink', glob($this->savePath.'/*'));
-        if (is_dir($this->savePath)) {
-            rmdir($this->savePath);
-        }
-
-        $this->savePath = null;
+        $storage = $this->getStorage();
+        $bag = new FlashBag();
+        $storage->registerBag($bag);
+        $this->assertSame($bag, $storage->getBag($bag->getName()));
     }
 
     /**
@@ -64,14 +52,6 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         $storage->registerBag(new AttributeBag());
 
         return $storage;
-    }
-
-    public function testBag()
-    {
-        $storage = $this->getStorage();
-        $bag = new FlashBag();
-        $storage->registerBag($bag);
-        $this->assertSame($bag, $storage->getBag($bag->getName()));
     }
 
     /**
@@ -128,6 +108,13 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         $storage->getBag('attributes')->set('lucky', 42);
 
         $this->assertEquals(42, $_SESSION['_sf2_attributes']['lucky']);
+    }
+
+    public function testRegenerationFailureDoesNotFlagStorageAsStarted()
+    {
+        $storage = $this->getStorage();
+        $this->assertFalse($storage->regenerate());
+        $this->assertFalse($storage->isStarted());
     }
 
     public function testDefaultSessionCacheLimiter()
@@ -198,12 +185,11 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Session\Storage\Proxy\NativeProxy', $storage->getSaveHandler());
     }
 
+    /**
+     * @requires PHP 5.4
+     */
     public function testSetSaveHandler54()
     {
-        if (PHP_VERSION_ID < 50400) {
-            $this->markTestSkipped('Test skipped, for PHP 5.4 only.');
-        }
-
         $this->iniSet('session.save_handler', 'files');
         $storage = $this->getStorage();
         $storage->setSaveHandler();
@@ -254,5 +240,25 @@ class NativeSessionStorageTest extends \PHPUnit_Framework_TestCase
         $storage->start();
         $this->assertSame($id, $storage->getId(), 'Same session ID after restarting');
         $this->assertSame(7, $storage->getBag('attributes')->get('lucky'), 'Data still available');
+    }
+
+    protected function setUp()
+    {
+        $this->iniSet('session.save_handler', 'files');
+        $this->iniSet('session.save_path', $this->savePath = sys_get_temp_dir() . '/sf2test');
+        if (!is_dir($this->savePath)) {
+            mkdir($this->savePath);
+        }
+    }
+
+    protected function tearDown()
+    {
+        session_write_close();
+        array_map('unlink', glob($this->savePath . '/*'));
+        if (is_dir($this->savePath)) {
+            rmdir($this->savePath);
+        }
+
+        $this->savePath = null;
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class ClientRequest extends Request
 {
     /**
@@ -24,12 +22,12 @@ class ClientRequest extends Request
     public function rules()
     {
         return [
-            'identificator' => 'required|unique:clients|numeric|digits_between:8,9',
+            'identificator' => 'required|unique:clients,id|numeric|digits_between:8,9',
             'name' => 'required|alpha_num',
             'lastname' => 'required|alpha_num',
             'mobile' => 'required|digits:11',
-            'email' => 'required|unique:clients|email',
-            'address' => 'required|alpha_num',
+            'email' => 'required|unique:clients,id|email',
+            'address' => 'required',
             'telephone' => 'required|digits:11',
             'birthday' => 'date',
             'sex' => 'size:1|in:F,M',

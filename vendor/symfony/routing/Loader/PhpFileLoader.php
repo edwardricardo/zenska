@@ -21,8 +21,6 @@ use Symfony\Component\Routing\RouteCollection;
  * The file must return a RouteCollection instance.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class PhpFileLoader extends FileLoader
 {
@@ -33,8 +31,6 @@ class PhpFileLoader extends FileLoader
      * @param string|null $type The resource type
      *
      * @return RouteCollection A RouteCollection instance
-     *
-     * @api
      */
     public function load($file, $type = null)
     {
@@ -48,16 +44,6 @@ class PhpFileLoader extends FileLoader
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @api
-     */
-    public function supports($resource, $type = null)
-    {
-        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'php' === $type);
-    }
-
-    /**
      * Safe include. Used for scope isolation.
      *
      * @param string        $file   File to include
@@ -68,5 +54,13 @@ class PhpFileLoader extends FileLoader
     private static function includeFile($file, PhpFileLoader $loader)
     {
         return include $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($resource, $type = null)
+    {
+        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'php' === $type);
     }
 }

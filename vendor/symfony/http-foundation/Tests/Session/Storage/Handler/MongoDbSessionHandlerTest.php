@@ -15,38 +15,17 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\MongoDbSessionHandl
 
 /**
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
+ * @requires extension mongo
+ * @group time-sensitive
  */
 class MongoDbSessionHandlerTest extends \PHPUnit_Framework_TestCase
 {
+    public $options;
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $mongo;
     private $storage;
-    public $options;
-
-    protected function setUp()
-    {
-        if (!extension_loaded('mongo')) {
-            $this->markTestSkipped('MongoDbSessionHandler requires the PHP "mongo" extension.');
-        }
-
-        $mongoClass = version_compare(phpversion('mongo'), '1.3.0', '<') ? 'Mongo' : 'MongoClient';
-
-        $this->mongo = $this->getMockBuilder($mongoClass)
-            ->getMock();
-
-        $this->options = array(
-            'id_field' => '_id',
-            'data_field' => 'data',
-            'time_field' => 'time',
-            'expiry_field' => 'expires_at',
-            'database' => 'sf2-test',
-            'collection' => 'session-test',
-        );
-
-        $this->storage = new MongoDbSessionHandler($this->mongo, $this->options);
-    }
 
     /**
      * @expectedException \InvalidArgumentException
@@ -108,6 +87,20 @@ class MongoDbSessionHandlerTest extends \PHPUnit_Framework_TestCase
             }));
 
         $this->assertEquals('bar', $this->storage->read('foo'));
+    }
+
+    private function createMongoCollectionMock()
+    {
+        $mongoClient = $this->getMockBuilder('MongoClient')
+            ->getMock();
+        $mongoDb = $this->getMockBuilder('MongoDB')
+            ->setConstructorArgs(array($mongoClient, 'database-name'))
+            ->getMock();
+        $collection = $this->getMockBuilder('MongoCollection')
+            ->setConstructorArgs(array($mongoDb, 'collection-name'))
+            ->getMock();
+
+        return $collection;
     }
 
     public function testWrite()
@@ -239,17 +232,24 @@ class MongoDbSessionHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->storage->gc(1));
     }
 
-    private function createMongoCollectionMock()
+    protected function setUp()
     {
-        $mongoClient = $this->getMockBuilder('MongoClient')
-            ->getMock();
-        $mongoDb = $this->getMockBuilder('MongoDB')
-            ->setConstructorArgs(array($mongoClient, 'database-name'))
-            ->getMock();
-        $collection = $this->getMockBuilder('MongoCollection')
-            ->setConstructorArgs(array($mongoDb, 'collection-name'))
+        parent::setUp();
+
+        $mongoClass = version_compare(phpversion('mongo'), '1.3.0', '<') ? 'Mongo' : 'MongoClient';
+
+        $this->mongo = $this->getMockBuilder($mongoClass)
             ->getMock();
 
-        return $collection;
+        $this->options = array(
+            'id_field' => '_id',
+            'data_field' => 'data',
+            'time_field' => 'time',
+            'expiry_field' => 'expires_at',
+            'database' => 'sf2-test',
+            'collection' => 'session-test',
+        );
+
+        $this->storage = new MongoDbSessionHandler($this->mongo, $this->options);
     }
 }

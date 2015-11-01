@@ -18,22 +18,6 @@ class PostgresGrammar extends Grammar
     ];
 
     /**
-     * Compile the lock into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  bool|string  $value
-     * @return string
-     */
-    protected function compileLock(Builder $query, $value)
-    {
-        if (is_string($value)) {
-            return $value;
-        }
-
-        return $value ? 'for update' : 'for share';
-    }
-
-    /**
      * Compile an update statement into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
@@ -80,7 +64,7 @@ class PostgresGrammar extends Grammar
      * Compile the "from" clause for an update with a join.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
-     * @return string
+     * @return string|null
      */
     protected function compileUpdateFrom(Builder $query)
     {
@@ -176,5 +160,21 @@ class PostgresGrammar extends Grammar
     public function compileTruncate(Builder $query)
     {
         return ['truncate '.$this->wrapTable($query->from).' restart identity' => []];
+    }
+
+    /**
+     * Compile the lock into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder $query
+     * @param  bool|string $value
+     * @return string
+     */
+    protected function compileLock(Builder $query, $value)
+    {
+        if (is_string($value)) {
+            return $value;
+        }
+
+        return $value ? 'for update' : 'for share';
     }
 }

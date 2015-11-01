@@ -11,12 +11,12 @@
 
 namespace Symfony\Component\Routing\Generator;
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * UrlGenerator can generate a URL or a path for any route in the RouteCollection
@@ -24,8 +24,6 @@ use Psr\Log\LoggerInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Tobias Schultze <http://tobion.de>
- *
- * @api
  */
 class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInterface
 {
@@ -83,8 +81,6 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
      * @param RouteCollection      $routes  A RouteCollection instance
      * @param RequestContext       $context The context
      * @param LoggerInterface|null $logger  A logger instance
-     *
-     * @api
      */
     public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null)
     {
@@ -96,17 +92,17 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
     /**
      * {@inheritdoc}
      */
-    public function setContext(RequestContext $context)
+    public function getContext()
     {
-        $this->context = $context;
+        return $this->context;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function setContext(RequestContext $context)
     {
-        return $this->context;
+        $this->context = $context;
     }
 
     /**

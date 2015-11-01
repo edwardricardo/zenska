@@ -196,6 +196,25 @@ abstract class AbstractCloner implements ClonerInterface
     abstract protected function doClone($var);
 
     /**
+     * Special handling for errors: cloning must be fail-safe.
+     *
+     * @internal
+     */
+    public function handleError($type, $msg, $file, $line, $context)
+    {
+        if (E_RECOVERABLE_ERROR === $type || E_USER_ERROR === $type) {
+            // Cloner never dies
+            throw new \ErrorException($msg, 0, $type, $file, $line);
+        }
+
+        if ($this->prevErrorHandler) {
+            return call_user_func($this->prevErrorHandler, $type, $msg, $file, $line, $context);
+        }
+
+        return false;
+    }
+
+    /**
      * Casts an object to an array representation.
      *
      * @param Stub $stub     The Stub for the casted object.
@@ -208,12 +227,13 @@ abstract class AbstractCloner implements ClonerInterface
         $obj = $stub->value;
         $class = $stub->class;
 
+        if (isset($class[15]) && "\0" === $class[15] && 0 === strpos($class, "class@anonymous\x00")) {
+            $stub->class = get_parent_class($class) . '@anonymous';
+        }
         if (isset($this->classInfo[$class])) {
             $classInfo = $this->classInfo[$class];
-            $stub->class = $classInfo[0];
         } else {
             $classInfo = array(
-                $class,
                 new \ReflectionClass($class),
                 array_reverse(array($class => $class) + class_parents($class) + class_implements($class) + array('*' => '*')),
             );
@@ -221,36 +241,13 @@ abstract class AbstractCloner implements ClonerInterface
             $this->classInfo[$class] = $classInfo;
         }
 
-        $a = $this->callCaster('Symfony\Component\VarDumper\Caster\Caster::castObject', $obj, $classInfo[1], null, $isNested);
+        $a = $this->callCaster('Symfony\Component\VarDumper\Caster\Caster::castObject', $obj, $classInfo[0], null, $isNested);
 
-        foreach ($classInfo[2] as $p) {
+        foreach ($classInfo[1] as $p) {
             if (!empty($this->casters[$p = strtolower($p)])) {
                 foreach ($this->casters[$p] as $p) {
                     $a = $this->callCaster($p, $obj, $a, $stub, $isNested);
                 }
-            }
-        }
-
-        return $a;
-    }
-
-    /**
-     * Casts a resource to an array representation.
-     *
-     * @param Stub $stub     The Stub for the casted resource.
-     * @param bool $isNested True if the object is nested in the dumped structure.
-     *
-     * @return array The resource casted as array.
-     */
-    protected function castResource(Stub $stub, $isNested)
-    {
-        $a = array();
-        $res = $stub->value;
-        $type = $stub->class;
-
-        if (!empty($this->casters[':'.$type])) {
-            foreach ($this->casters[':'.$type] as $c) {
-                $a = $this->callCaster($c, $res, $a, $stub, $isNested);
             }
         }
 
@@ -284,21 +281,25 @@ abstract class AbstractCloner implements ClonerInterface
     }
 
     /**
-     * Special handling for errors: cloning must be fail-safe.
+     * Casts a resource to an array representation.
      *
-     * @internal
+     * @param Stub $stub The Stub for the casted resource.
+     * @param bool $isNested True if the object is nested in the dumped structure.
+     *
+     * @return array The resource casted as array.
      */
-    public function handleError($type, $msg, $file, $line, $context)
+    protected function castResource(Stub $stub, $isNested)
     {
-        if (E_RECOVERABLE_ERROR === $type || E_USER_ERROR === $type) {
-            // Cloner never dies
-            throw new \ErrorException($msg, 0, $type, $file, $line);
+        $a = array();
+        $res = $stub->value;
+        $type = $stub->class;
+
+        if (!empty($this->casters[':' . $type])) {
+            foreach ($this->casters[':' . $type] as $c) {
+                $a = $this->callCaster($c, $res, $a, $stub, $isNested);
+            }
         }
 
-        if ($this->prevErrorHandler) {
-            return call_user_func($this->prevErrorHandler, $type, $msg, $file, $line, $context);
-        }
-
-        return false;
+        return $a;
     }
 }

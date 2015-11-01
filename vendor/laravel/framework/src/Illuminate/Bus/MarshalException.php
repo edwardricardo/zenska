@@ -2,8 +2,8 @@
 
 namespace Illuminate\Bus;
 
-use RuntimeException;
 use ReflectionParameter;
+use RuntimeException;
 
 class MarshalException extends RuntimeException
 {
@@ -13,6 +13,8 @@ class MarshalException extends RuntimeException
      * @param  string  $command
      * @param  \ReflectionParameter  $parameter
      * @return void
+     *
+     * @throws static
      */
     public static function whileMapping($command, ReflectionParameter $parameter)
     {

@@ -7,7 +7,7 @@ body {
     background-color: darkslateblue;
     border-radius: 10px;
     box-shadow: mediumpurple 5px 5px 20px;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 .mainPanel{
     padding: 30px;
@@ -27,6 +27,12 @@ body {
     margin-bottom: 20px;
     color: deeppink;
     text-shadow: mediumpurple 5px 5px 20px;
+}
+
+.maintext {
+    color: deeppink;
+    text-shadow: mediumpurple 5px 5px 20px;
+    font-size: medium;
 }
 
 table {

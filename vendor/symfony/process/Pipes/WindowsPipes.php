@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\Process\Pipes;
 
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\RuntimeException;
+use Symfony\Component\Process\Process;
 
 /**
  * WindowsPipes implementation uses temporary files as handles.
@@ -48,12 +48,11 @@ class WindowsPipes extends AbstractPipes
             //
             // @see https://bugs.php.net/bug.php?id=51800
             $this->files = array(
-                Process::STDOUT => tempnam(sys_get_temp_dir(), 'sf_proc_stdout'),
-                Process::STDERR => tempnam(sys_get_temp_dir(), 'sf_proc_stderr'),
+                Process::STDOUT => tempnam(sys_get_temp_dir(), 'out_sf_proc'),
+                Process::STDERR => tempnam(sys_get_temp_dir(), 'err_sf_proc'),
             );
             foreach ($this->files as $offset => $file) {
-                $this->fileHandles[$offset] = fopen($this->files[$offset], 'rb');
-                if (false === $this->fileHandles[$offset]) {
+                if (false === $file || false === $this->fileHandles[$offset] = fopen($file, 'rb')) {
                     throw new RuntimeException('A temporary file could not be opened to write the process output to, verify that your TEMP environment variable is writable');
                 }
             }
@@ -66,10 +65,48 @@ class WindowsPipes extends AbstractPipes
         }
     }
 
+    /**
+     * Creates a new WindowsPipes instance.
+     *
+     * @param Process $process The process
+     * @param $input
+     *
+     * @return WindowsPipes
+     */
+    public static function create(Process $process, $input)
+    {
+        return new static($process->isOutputDisabled(), $input);
+    }
+
     public function __destruct()
     {
         $this->close();
         $this->removeFiles();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        parent::close();
+        foreach ($this->fileHandles as $handle) {
+            fclose($handle);
+        }
+        $this->fileHandles = array();
+    }
+
+    /**
+     * Removes temporary files.
+     */
+    private function removeFiles()
+    {
+        foreach ($this->files as $filename) {
+            if (file_exists($filename)) {
+                @unlink($filename);
+            }
+        }
+        $this->files = array();
     }
 
     /**
@@ -140,52 +177,6 @@ class WindowsPipes extends AbstractPipes
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function areOpen()
-    {
-        return (bool) $this->pipes && (bool) $this->fileHandles;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function close()
-    {
-        parent::close();
-        foreach ($this->fileHandles as $handle) {
-            fclose($handle);
-        }
-        $this->fileHandles = array();
-    }
-
-    /**
-     * Creates a new WindowsPipes instance.
-     *
-     * @param Process $process The process
-     * @param $input
-     *
-     * @return WindowsPipes
-     */
-    public static function create(Process $process, $input)
-    {
-        return new static($process->isOutputDisabled(), $input);
-    }
-
-    /**
-     * Removes temporary files.
-     */
-    private function removeFiles()
-    {
-        foreach ($this->files as $filename) {
-            if (file_exists($filename)) {
-                @unlink($filename);
-            }
-        }
-        $this->files = array();
-    }
-
-    /**
      * Writes input to stdin.
      *
      * @param bool $blocking
@@ -250,5 +241,13 @@ class WindowsPipes extends AbstractPipes
             fclose($this->pipes[0]);
             unset($this->pipes[0]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function areOpen()
+    {
+        return (bool)$this->pipes && (bool)$this->fileHandles;
     }
 }

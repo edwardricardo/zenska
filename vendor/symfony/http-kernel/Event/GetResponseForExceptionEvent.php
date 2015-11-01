@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\HttpKernel\Event;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Allows to create a response for a thrown exception.
@@ -26,8 +26,6 @@ use Symfony\Component\HttpFoundation\Request;
  * event.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @api
  */
 class GetResponseForExceptionEvent extends GetResponseEvent
 {
@@ -49,8 +47,6 @@ class GetResponseForExceptionEvent extends GetResponseEvent
      * Returns the thrown exception.
      *
      * @return \Exception The thrown exception
-     *
-     * @api
      */
     public function getException()
     {
@@ -63,8 +59,6 @@ class GetResponseForExceptionEvent extends GetResponseEvent
      * This exception will be thrown if no response is set in the event.
      *
      * @param \Exception $exception The thrown exception
-     *
-     * @api
      */
     public function setException(\Exception $exception)
     {

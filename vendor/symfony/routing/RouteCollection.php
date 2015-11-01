@@ -22,8 +22,6 @@ use Symfony\Component\Config\Resource\ResourceInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Tobias Schultze <http://tobion.de>
- *
- * @api
  */
 class RouteCollection implements \IteratorAggregate, \Countable
 {
@@ -73,24 +71,12 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @param string $name  The route name
      * @param Route  $route A Route instance
-     *
-     * @api
      */
     public function add($name, Route $route)
     {
         unset($this->routes[$name]);
 
         $this->routes[$name] = $route;
-    }
-
-    /**
-     * Returns all routes in this collection.
-     *
-     * @return Route[] An array of routes
-     */
-    public function all()
-    {
-        return $this->routes;
     }
 
     /**
@@ -122,8 +108,6 @@ class RouteCollection implements \IteratorAggregate, \Countable
      * routes of the added collection.
      *
      * @param RouteCollection $collection A RouteCollection instance
-     *
-     * @api
      */
     public function addCollection(RouteCollection $collection)
     {
@@ -138,13 +122,31 @@ class RouteCollection implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Returns all routes in this collection.
+     *
+     * @return Route[] An array of routes
+     */
+    public function all()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * Returns an array of resources loaded to build this collection.
+     *
+     * @return ResourceInterface[] An array of resources
+     */
+    public function getResources()
+    {
+        return array_unique($this->resources);
+    }
+
+    /**
      * Adds a prefix to the path of all child routes.
      *
      * @param string $prefix       An optional prefix to add before each pattern of the route collection
      * @param array  $defaults     An array of default values
      * @param array  $requirements An array of requirements
-     *
-     * @api
      */
     public function addPrefix($prefix, array $defaults = array(), array $requirements = array())
     {
@@ -261,16 +263,6 @@ class RouteCollection implements \IteratorAggregate, \Countable
         foreach ($this->routes as $route) {
             $route->setMethods($methods);
         }
-    }
-
-    /**
-     * Returns an array of resources loaded to build this collection.
-     *
-     * @return ResourceInterface[] An array of resources
-     */
-    public function getResources()
-    {
-        return array_unique($this->resources);
     }
 
     /**

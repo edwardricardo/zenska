@@ -13,24 +13,14 @@ namespace Symfony\Component\Console\Tests\Helper;
 
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Console\Tests;
-
-require_once __DIR__.'/../ClockMock.php';
 
 /**
  * @group legacy
+ * @group time-sensitive
  */
 class LegacyProgressHelperTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        Tests\with_clock_mock(true);
-    }
-
-    protected function tearDown()
-    {
-        Tests\with_clock_mock(false);
-    }
+    protected $lastMessagesLength;
 
     public function testAdvance()
     {
@@ -40,6 +30,24 @@ class LegacyProgressHelperTest extends \PHPUnit_Framework_TestCase
 
         rewind($output->getStream());
         $this->assertEquals($this->generateOutput('    1 [->--------------------------]'), stream_get_contents($output->getStream()));
+    }
+
+    protected function getOutputStream($decorated = true)
+    {
+        return new StreamOutput(fopen('php://memory', 'r+', false), StreamOutput::VERBOSITY_NORMAL, $decorated);
+    }
+
+    protected function generateOutput($expected)
+    {
+        $expectedout = $expected;
+
+        if ($this->lastMessagesLength !== null) {
+            $expectedout = str_pad($expected, $this->lastMessagesLength, "\x20", STR_PAD_RIGHT);
+        }
+
+        $this->lastMessagesLength = strlen($expectedout);
+
+        return "\x0D" . $expectedout;
     }
 
     public function testAdvanceWithStep()
@@ -167,12 +175,11 @@ class LegacyProgressHelperTest extends \PHPUnit_Framework_TestCase
         $progress->advance(1);
     }
 
+    /**
+     * @requires extension mbstring
+     */
     public function testMultiByteSupport()
     {
-        if (!function_exists('mb_strlen') || (false === $encoding = mb_detect_encoding('■'))) {
-            $this->markTestSkipped('The mbstring extension is needed for multi-byte support');
-        }
-
         $progress = new ProgressHelper();
         $progress->start($output = $this->getOutputStream());
         $progress->setBarCharacter('■');
@@ -216,25 +223,5 @@ class LegacyProgressHelperTest extends \PHPUnit_Framework_TestCase
 
         rewind($output->getStream());
         $this->assertEquals('', stream_get_contents($output->getStream()));
-    }
-
-    protected function getOutputStream($decorated = true)
-    {
-        return new StreamOutput(fopen('php://memory', 'r+', false), StreamOutput::VERBOSITY_NORMAL, $decorated);
-    }
-
-    protected $lastMessagesLength;
-
-    protected function generateOutput($expected)
-    {
-        $expectedout = $expected;
-
-        if ($this->lastMessagesLength !== null) {
-            $expectedout = str_pad($expected, $this->lastMessagesLength, "\x20", STR_PAD_RIGHT);
-        }
-
-        $this->lastMessagesLength = strlen($expectedout);
-
-        return "\x0D".$expectedout;
     }
 }

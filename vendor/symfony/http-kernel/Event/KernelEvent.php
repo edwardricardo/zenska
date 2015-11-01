@@ -11,16 +11,14 @@
 
 namespace Symfony\Component\HttpKernel\Event;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Base class for events thrown in the HttpKernel component.
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @api
  */
 class KernelEvent extends Event
 {
@@ -57,8 +55,6 @@ class KernelEvent extends Event
      * Returns the kernel in which this event was thrown.
      *
      * @return HttpKernelInterface
-     *
-     * @api
      */
     public function getKernel()
     {
@@ -69,8 +65,6 @@ class KernelEvent extends Event
      * Returns the request the kernel is currently processing.
      *
      * @return Request
-     *
-     * @api
      */
     public function getRequest()
     {
@@ -82,8 +76,6 @@ class KernelEvent extends Event
      *
      * @return int One of HttpKernelInterface::MASTER_REQUEST and
      *             HttpKernelInterface::SUB_REQUEST
-     *
-     * @api
      */
     public function getRequestType()
     {
@@ -94,8 +86,6 @@ class KernelEvent extends Event
      * Checks if this is a master request.
      *
      * @return bool True if the request is a master request
-     *
-     * @api
      */
     public function isMasterRequest()
     {

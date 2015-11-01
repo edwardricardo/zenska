@@ -11,18 +11,16 @@
 
 namespace Symfony\Component\Translation\Loader;
 
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Yaml\Parser as YamlParser;
 use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser as YamlParser;
 
 /**
  * YamlFileLoader loads translations from Yaml files.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @api
  */
 class YamlFileLoader extends ArrayLoader
 {
@@ -30,8 +28,6 @@ class YamlFileLoader extends ArrayLoader
 
     /**
      * {@inheritdoc}
-     *
-     * @api
      */
     public function load($resource, $locale, $domain = 'messages')
     {

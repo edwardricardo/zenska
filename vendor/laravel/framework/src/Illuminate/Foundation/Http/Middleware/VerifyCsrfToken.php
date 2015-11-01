@@ -3,10 +3,10 @@
 namespace Illuminate\Foundation\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class VerifyCsrfToken
 {
@@ -54,6 +54,17 @@ class VerifyCsrfToken
     }
 
     /**
+     * Determine if the HTTP request uses a ‘read’ verb.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return bool
+     */
+    protected function isReading($request)
+    {
+        return in_array($request->method(), ['HEAD', 'GET', 'OPTIONS']);
+    }
+
+    /**
      * Determine if the request has a URI that should pass through CSRF verification.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -62,7 +73,7 @@ class VerifyCsrfToken
     protected function shouldPassThrough($request)
     {
         foreach ($this->except as $except) {
-            if ($request->is($except)) {
+            if ($request->is(trim($except, '/'))) {
                 return true;
             }
         }
@@ -84,7 +95,7 @@ class VerifyCsrfToken
             $token = $this->encrypter->decrypt($header);
         }
 
-        return Str::equals($request->session()->token(), $token);
+        return Str::equals((string)$request->session()->token(), $token);
     }
 
     /**
@@ -106,16 +117,5 @@ class VerifyCsrfToken
         );
 
         return $response;
-    }
-
-    /**
-     * Determine if the HTTP request uses a ‘read’ verb.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    protected function isReading($request)
-    {
-        return in_array($request->method(), ['HEAD', 'GET', 'OPTIONS']);
     }
 }

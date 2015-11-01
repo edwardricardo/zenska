@@ -2,9 +2,9 @@
 
 namespace Illuminate\Database\Schema\Grammars;
 
-use Illuminate\Support\Fluent;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Fluent;
 
 class SQLiteGrammar extends Grammar
 {
@@ -560,6 +560,17 @@ class SQLiteGrammar extends Grammar
     protected function typeBinary(Fluent $column)
     {
         return 'blob';
+    }
+
+    /**
+     * Create the column definition for a uuid type.
+     *
+     * @param  \Illuminate\Support\Fluent $column
+     * @return string
+     */
+    protected function typeUuid(Fluent $column)
+    {
+        return 'varchar';
     }
 
     /**

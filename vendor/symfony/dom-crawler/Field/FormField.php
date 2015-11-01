@@ -58,6 +58,11 @@ abstract class FormField
     }
 
     /**
+     * Initializes the form field.
+     */
+    abstract protected function initialize();
+
+    /**
      * Returns the name of the field.
      *
      * @return string The name of the field
@@ -81,8 +86,6 @@ abstract class FormField
      * Sets the value of the field.
      *
      * @param string $value The value of the field
-     *
-     * @api
      */
     public function setValue($value)
     {
@@ -108,9 +111,4 @@ abstract class FormField
     {
         return $this->node->hasAttribute('disabled');
     }
-
-    /**
-     * Initializes the form field.
-     */
-    abstract protected function initialize();
 }

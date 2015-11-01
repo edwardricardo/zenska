@@ -2,10 +2,10 @@
 
 namespace Illuminate\Mail\Transport;
 
-use Swift_Transport;
-use Swift_Mime_Message;
-use Swift_Events_SendEvent;
 use Swift_Events_EventListener;
+use Swift_Events_SendEvent;
+use Swift_Mime_Message;
+use Swift_Transport;
 
 abstract class Transport implements Swift_Transport
 {
@@ -59,10 +59,12 @@ abstract class Transport implements Swift_Transport
      */
     protected function beforeSendPerformed(Swift_Mime_Message $message)
     {
-        foreach ($this->plugins as $plugin) {
-            $evt = new Swift_Events_SendEvent($this, $message);
+        $event = new Swift_Events_SendEvent($this, $message);
 
-            $plugin->beforeSendPerformed($evt);
+        foreach ($this->plugins as $plugin) {
+            if (method_exists($plugin, 'beforeSendPerformed')) {
+                $plugin->beforeSendPerformed($event);
+            }
         }
     }
 }
