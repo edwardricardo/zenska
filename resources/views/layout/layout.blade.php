@@ -49,7 +49,7 @@
 
 <div class="container">
 	<div class="row row-centered">
-		<div class="col-md-10 col-centered mainDiv">
+		<div class="col-md-12 col-centered">
 			@yield('content')
 		</div>
 	</div>
