@@ -56,16 +56,6 @@ trait SoftDeletes
     }
 
     /**
-     * Get the name of the "deleted at" column.
-     *
-     * @return string
-     */
-    public function getDeletedAtColumn()
-    {
-        return defined('static::DELETED_AT') ? static::DELETED_AT : 'deleted_at';
-    }
-
-    /**
      * Register a restoring model event with the dispatcher.
      *
      * @param  \Closure|string $callback
@@ -165,5 +155,15 @@ trait SoftDeletes
         $this->{$this->getDeletedAtColumn()} = $time = $this->freshTimestamp();
 
         $query->update([$this->getDeletedAtColumn() => $this->fromDateTime($time)]);
+    }
+
+    /**
+     * Get the name of the "deleted at" column.
+     *
+     * @return string
+     */
+    public function getDeletedAtColumn()
+    {
+        return defined('static::DELETED_AT') ? static::DELETED_AT : 'deleted_at';
     }
 }

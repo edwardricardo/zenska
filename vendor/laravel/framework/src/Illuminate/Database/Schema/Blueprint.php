@@ -24,6 +24,12 @@ class Blueprint
      */
     public $collation;
     /**
+     * Whether to make the table temporary.
+     *
+     * @var bool
+     */
+    public $temporary = false;
+    /**
      * The table the blueprint describes.
      *
      * @var string
@@ -223,6 +229,16 @@ class Blueprint
         $this->commands[] = $command = $this->createCommand($name, $parameters);
 
         return $command;
+    }
+
+    /**
+     * Indicate that the table needs to be temporary.
+     *
+     * @return void
+     */
+    public function temporary()
+    {
+        $this->temporary = true;
     }
 
     /**

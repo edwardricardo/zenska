@@ -384,29 +384,6 @@ trait InteractsWithPages
     }
 
     /**
-     * Assert that a given page successfully loaded.
-     *
-     * @param  string $uri
-     * @param  string|null $message
-     * @return void
-     */
-    protected function assertPageLoaded($uri, $message = null)
-    {
-        $status = $this->response->getStatusCode();
-
-        try {
-            $this->assertEquals(200, $status);
-        } catch (PHPUnitException $e) {
-            $message = $message ?: "A request to [{$uri}] failed. Received status code [{$status}].";
-
-            $responseException = isset($this->response->exception)
-                ? $this->response->exception : null;
-
-            throw new HttpException($message, null, $responseException);
-        }
-    }
-
-    /**
      * Assert that a given string is not seen on the page.
      *
      * @param  string $text
@@ -512,59 +489,6 @@ trait InteractsWithPages
     public function visit($uri)
     {
         return $this->makeRequest('GET', $uri);
-    }
-
-    /**
-     * Make a request to the application and create a Crawler instance.
-     *
-     * @param  string $method
-     * @param  string $uri
-     * @param  array $parameters
-     * @param  array $cookies
-     * @param  array $files
-     * @return $this
-     */
-    protected function makeRequest($method, $uri, $parameters = [], $cookies = [], $files = [])
-    {
-        $uri = $this->prepareUrlForRequest($uri);
-
-        $this->call($method, $uri, $parameters, $cookies, $files);
-
-        $this->clearInputs()->followRedirects()->assertPageLoaded($uri);
-
-        $this->currentUri = $this->app->make('request')->fullUrl();
-
-        $this->crawler = new Crawler($this->response->getContent(), $uri);
-
-        return $this;
-    }
-
-    /**
-     * Follow redirects from the last response.
-     *
-     * @return $this
-     */
-    protected function followRedirects()
-    {
-        while ($this->response->isRedirect()) {
-            $this->makeRequest('GET', $this->response->getTargetUrl());
-        }
-
-        return $this;
-    }
-
-    /**
-     * Clear the inputs for the current page.
-     *
-     * @return $this
-     */
-    protected function clearInputs()
-    {
-        $this->inputs = [];
-
-        $this->uploads = [];
-
-        return $this;
     }
 
     /**
@@ -739,6 +663,82 @@ trait InteractsWithPages
         return new UploadedFile(
             $file['tmp_name'], basename($uploads[$name]), $file['type'], $file['size'], $file['error'], true
         );
+    }
+
+    /**
+     * Make a request to the application and create a Crawler instance.
+     *
+     * @param  string $method
+     * @param  string $uri
+     * @param  array $parameters
+     * @param  array $cookies
+     * @param  array $files
+     * @return $this
+     */
+    protected function makeRequest($method, $uri, $parameters = [], $cookies = [], $files = [])
+    {
+        $uri = $this->prepareUrlForRequest($uri);
+
+        $this->call($method, $uri, $parameters, $cookies, $files);
+
+        $this->clearInputs()->followRedirects()->assertPageLoaded($uri);
+
+        $this->currentUri = $this->app->make('request')->fullUrl();
+
+        $this->crawler = new Crawler($this->response->getContent(), $uri);
+
+        return $this;
+    }
+
+    /**
+     * Assert that a given page successfully loaded.
+     *
+     * @param  string $uri
+     * @param  string|null $message
+     * @return void
+     */
+    protected function assertPageLoaded($uri, $message = null)
+    {
+        $status = $this->response->getStatusCode();
+
+        try {
+            $this->assertEquals(200, $status);
+        } catch (PHPUnitException $e) {
+            $message = $message ?: "A request to [{$uri}] failed. Received status code [{$status}].";
+
+            $responseException = isset($this->response->exception)
+                ? $this->response->exception : null;
+
+            throw new HttpException($message, null, $responseException);
+        }
+    }
+
+    /**
+     * Follow redirects from the last response.
+     *
+     * @return $this
+     */
+    protected function followRedirects()
+    {
+        while ($this->response->isRedirect()) {
+            $this->makeRequest('GET', $this->response->getTargetUrl());
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clear the inputs for the current page.
+     *
+     * @return $this
+     */
+    protected function clearInputs()
+    {
+        $this->inputs = [];
+
+        $this->uploads = [];
+
+        return $this;
     }
 
     /**
