@@ -144,6 +144,10 @@ body {
     font-size: medium;
 }
 
+.tab-style {
+    color: white;
+}
+
 table {
     background-color: mediumpurple;
 }

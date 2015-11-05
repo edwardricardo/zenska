@@ -15,8 +15,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return view('products.index', compact('products', $products));
+        $pproducts = Product::where('section', '=', 'Peluqueria')->paginate(10);
+        $mpproducts = Product::where('section', '=', 'Manos y Pies')->paginate(10);
+        $bproducts = Product::where('section', '=', 'Barberia')->paginate(10);
+        $aproducts = Product::where('section', '=', 'Alimentos')->paginate(10);
+        $oproducts = Product::where('section', '=', 'Otros')->paginate(10);
+
+        return view('products.index', ['pproducts' => $pproducts, 'mpproducts' => $mpproducts, 'bproducts' => $bproducts, 'aproducts' => $aproducts, 'oproducts' => $oproducts]);
 
     }
 
