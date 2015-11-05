@@ -77,7 +77,7 @@ $factory->define(App\Product::class, function (Faker\Generator $faker) {
     }
 
     return [
-        'code' => $faker->numberBetween($min = 1000, $max = 5000),
+        'code' => $faker->unique()->numberBetween($min = 1000, $max = 5000),
         'name' => $faker->word,
         'section' => $faker->randomElement($array = array('Peluqueria', 'Manos y Pies', 'Barberia', 'Alimentos', 'Otros')),
         'product_provider_id' => $faker->randomElement($array = $ids),

@@ -15,7 +15,7 @@
                             <th class="col-md-1">RIF</th>
                             <th class="col-md-5">Nombre</th>
                             <th class="col-md-2 text-center">Tel&eacute;fono</th>
-                            <th class="col-md-4 text-center">Persona de contacto</th>
+                            <th class="col-md-4">Persona de contacto</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -30,7 +30,7 @@
                         <tbody>
                         @foreach($providers as $provider)
                             <tr>
-                                <td class="col-md-1">{{$provider->identificator}}</td>
+                                <td class="col-md-1">{!!  link_to_route('providers.edit', $title = $provider->identificator, $parameters = ['id' => $provider->id])!!}</td>
                                 <td class="col-md-5">{!!  link_to_route('providers.edit', $title = $provider->name, $parameters = ['id' => $provider->id])!!}</td>
                                 <td class="col-md-2 text-center">{{$provider->telephone }}</td>
                                 <td class="col-md-4">{{$provider->contact}}</td>

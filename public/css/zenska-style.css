@@ -1,5 +1,5 @@
 body {
-    background-color: #3c3c3c;
+    background-color: #220729;
     font-family: "latosemibold", Helvetica, Arial, sans-serif;
 }
 
@@ -112,10 +112,10 @@ body {
 }
 
 .mainDiv {
-    border: 2px solid deeppink;
-    background-color: darkslateblue;
+    border: 2px solid #F11DCA;
+    background-color: #4A065D;
     border-radius: 10px;
-    box-shadow: mediumpurple 5px 5px 20px;
+    box-shadow: #F11DCA 5px 5px 30px;
     margin-top: 20px;
 }
 .mainPanel{
@@ -132,15 +132,15 @@ body {
 }
 
 .subrayado {
-    border-bottom: 2px solid deeppink;
+    border-bottom: 2px solid darkgray;
     margin-bottom: 20px;
-    color: deeppink;
+    color: darkgray;
     text-shadow: mediumpurple 5px 5px 20px;
 }
 
 .maintext {
-    color: deeppink;
-    text-shadow: mediumpurple 5px 5px 20px;
+    color: darkgray;
+    text-shadow: whitesmoke 5px 5px 25px;
     font-size: medium;
 }
 
@@ -149,11 +149,11 @@ body {
 }
 
 table {
-    background-color: mediumpurple;
+    background-color: darkviolet;
 }
 
 .form-style {
-    background-color: mediumpurple;
+    background-color: darkviolet;
     padding: 15px 5px;
     border-radius: 10px;
     color: white;
@@ -164,12 +164,13 @@ table {
 .buttons-box {
     margin: 15px 0;
 }
+
 .table-curved {
     border-collapse: separate;
     border: solid #ddd 1px;
     border-radius: 6px;
-    border-left: 0px;
-    border-top: 0px;
+    border-left: 0;
+    border-top: 0;
 }
 .table-curved > thead:first-child > tr:first-child > th {
     border-bottom: 0px;
@@ -180,12 +181,12 @@ table {
     border-left: 1px solid #ddd;
     border-top: 1px solid #ddd;
     color: white;
-    text-shadow: black 5px 5px 25px;
+    text-shadow: black 10px 10px 25px;
 }
 
 .table-curved tbody td a {
     color: #afd9ee;
-    text-shadow: black 5px 5px 25px;
+    text-shadow: black 10px 10px 25px;
 }
 
 .table-curved > :first-child > :first-child > :first-child {

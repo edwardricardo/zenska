@@ -15,19 +15,23 @@
                     @include('employees.partials.employee')
                 </div>
 
-                <div class="col-md-2 col-xs-12 col-centered buttons-box">
-                    {!! Form::submit('Actualizar', ['class' => 'btn btn-primary btn-block']) !!}
-                    {!! Form::close() !!}
-                </div>
+                <div class="col-md-11 col-xs-12 col-centered buttons-box">
 
-                <div class="col-md-2 col-xs-12 col-centered buttons-box">
-                    {!! Form::open(['route' => ['employees.destroy', $employee->id], 'method' => 'DELETE']) !!}
-                    {!! Form::submit('Eliminar', ['class' => 'btn btn-danger btn-block']) !!}
-                    {!! Form::close() !!}
-                </div>
+                    <div class="col-md-4 col-xs-12 col-centered buttons-box">
+                        {!! Form::submit('Actualizar', ['class' => 'btn btn-primary col-md-12 col-xs-12']) !!}
+                        {!! Form::close() !!}
+                    </div>
 
-                <div class="col-md-2 col-xs-12 col-centered buttons-box">
-                    {!! link_to_route('employees.index', 'Atras', $atributes = array(),  ['class' => 'btn btn-success btn-block']) !!}
+                    <div class="col-md-4 col-xs-12 col-centered buttons-box">
+                        {!! Form::open(['route' => ['clients.destroy', $employee->id], 'method' => 'DELETE']) !!}
+                        {!! Form::submit('Eliminar', ['class' => 'btn btn-danger col-md-12 col-xs-12']) !!}
+                        {!! Form::close() !!}
+                    </div>
+
+                    <div class="col-md-4 col-xs-12 col-centered buttons-box">
+                        {!! link_to_route('clients.index', 'Atras', $atributes = array(),  ['class' => 'btn btn-success col-md-12 col-xs-12']) !!}
+                    </div>
+
                 </div>
 
             </div>

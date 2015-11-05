@@ -21,8 +21,12 @@ class ProductController extends Controller
         $aproducts = Product::where('section', '=', 'Alimentos')->paginate(10);
         $oproducts = Product::where('section', '=', 'Otros')->paginate(10);
 
-        return view('products.index', ['pproducts' => $pproducts, 'mpproducts' => $mpproducts, 'bproducts' => $bproducts, 'aproducts' => $aproducts, 'oproducts' => $oproducts]);
-
+        return view('products.index', [
+            'pproducts' => $pproducts,
+            'mpproducts' => $mpproducts,
+            'bproducts' => $bproducts,
+            'aproducts' => $aproducts,
+            'oproducts' => $oproducts]);
     }
 
     /**

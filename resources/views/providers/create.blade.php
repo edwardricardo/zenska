@@ -15,13 +15,15 @@
                     @include('providers.partials.provider')
                 </div>
 
-                <div class="col-md-2 col-xs-12 col-centered buttons-box">
-                    {!! Form::submit('Guardar', ['class' => 'btn btn-primary btn-block']) !!}
-                </div>
+                <div class="col-md-6 col-xs-12 col-centered buttons-box">
+                    <div class="col-md-6 col-xs-12 col-centered buttons-box">
+                        {!! Form::submit('Guardar', ['class' => 'btn btn-primary col-md-12 col-xs-12']) !!}
+                        {!! Form::close() !!}
+                    </div>
 
-                <div class="col-md-2 col-xs-12 col-centered buttons-box">
-                    {!! link_to_route('providers.index', 'Atras', $atributes = array(),  ['class' => 'btn btn-success btn-block']) !!}
-                    {!! Form::close() !!}
+                    <div class="col-md-6 col-xs-12 col-centered buttons-box">
+                        {!! link_to_route('providers.index', 'Atras', $atributes = array(),  ['class' => 'btn btn-success col-md-12 col-xs-12']) !!}
+                    </div>
                 </div>
             </div>
         </div>
