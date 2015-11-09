@@ -8,10 +8,6 @@ class Product extends Model
 {
     protected $table = 'products';
 
-    protected $fillable = ['code', 'name', 'section', 'product_provider_id', 'price', 'stock', 'active'];
+    protected $fillable = ['code', 'name', 'price', 'stock', 'active', 'observation'];
 
-    public function productProvider()
-    {
-        return $this->belongsTo('App\ProductProvider');
-    }
 }

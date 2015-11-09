@@ -129,7 +129,11 @@ return [
         'url' => 'Sitio web',
         'contact' => 'Persona de contacto',
         'bank' => 'Banco',
-        'bank_account' => 'Número de cuenta'
+        'bank_account' => 'Número de cuenta',
+        'code' => 'Código',
+        'price' => 'Precio',
+        'stock' => 'Existencia',
+        'active' => 'Activo'
     ],
 
 ];

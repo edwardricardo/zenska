@@ -37,8 +37,17 @@ Route::post('password_reset', ['as' => 'post_password_reset', 'uses' => 'Auth\Pa
 // Maintenance routes...
 Route::get('maintenance', ['as' => 'maintenance', 'uses' => 'MaintenanceController@getIndex']);
 
-
 Route::resource('clients', 'ClientController');
 Route::resource('employees', 'EmployeeController');
 Route::resource('providers', 'ProductProviderController');
-Route::resource('products', 'ProductController');
+
+// Products routes...
+Route::get('products', ['as' => 'products.index', 'uses' => 'ProductController@index']);
+Route::get('products/hairdressing', ['as' => 'products.hairdressing', 'uses' => 'ProductController@getHairdressing']);
+Route::get('products/handsfeetcare', ['as' => 'products.handsfeetcare', 'uses' => 'ProductController@getHandsfeetcare']);
+Route::get('products/barbershop', ['as' => 'products.barbershop', 'uses' => 'ProductController@getBarbershop']);
+Route::get('products/food', ['as' => 'products.food', 'uses' => 'ProductController@getFood']);
+Route::get('products/others', ['as' => 'products.others', 'uses' => 'ProductController@getOthers']);
+Route::get('products/{id}/edit', ['as' => 'products.edit', 'uses' => 'ProductController@edit']);
+Route::get('products/create/{section}/{label}', ['as' => 'products.create', 'uses' => 'ProductController@create']);
+Route::post('products', ['as' => 'products.store', 'uses' => 'ProductController@store']);

@@ -17,11 +17,11 @@ class CreateProductsTable extends Migration
             $table->string('code', 100);
             $table->unique('code');
             $table->string('name', 100);
-            $table->enum('section', ['Peluqueria', 'Manos y Pies', 'Barberia', 'Alimentos', 'Otros']);
-            $table->integer('product_provider_id')->unsigned();
+            $table->enum('section', ['hairdressing', 'handsfeetcare', 'barbershop', 'food', 'other']);
             $table->float('price', 8, 2);
             $table->integer('stock')->unsigned();
             $table->enum('active', ['Y', 'N']);
+            $table->text('observation');
             $table->timestamps();
         });
     }

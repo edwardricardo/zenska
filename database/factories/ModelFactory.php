@@ -79,10 +79,10 @@ $factory->define(App\Product::class, function (Faker\Generator $faker) {
     return [
         'code' => $faker->unique()->numberBetween($min = 1000, $max = 5000),
         'name' => $faker->word,
-        'section' => $faker->randomElement($array = array('Peluqueria', 'Manos y Pies', 'Barberia', 'Alimentos', 'Otros')),
-        'product_provider_id' => $faker->randomElement($array = $ids),
+        'section' => $faker->randomElement($array = array('hairdressing', 'handsfeetcare', 'barbershop', 'food', 'other')),
         'price' => $faker->numberBetween($min = 1000, $max = 5000),
         'stock' => $faker->randomNumber($nbDigits = 2, $strict = true),
         'active' => $faker->randomElement($array = array('Y', 'N')),
+        'observation' => $faker->sentence(20)
     ];
 });

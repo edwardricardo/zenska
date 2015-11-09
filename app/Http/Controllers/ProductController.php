@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Http\Requests\ProductRequest;
 use App\Product;
 use Illuminate\Http\Request;
+
 
 class ProductController extends Controller
 {
@@ -15,18 +17,38 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $pproducts = Product::where('section', '=', 'Peluqueria')->paginate(10);
-        $mpproducts = Product::where('section', '=', 'Manos y Pies')->paginate(10);
-        $bproducts = Product::where('section', '=', 'Barberia')->paginate(10);
-        $aproducts = Product::where('section', '=', 'Alimentos')->paginate(10);
-        $oproducts = Product::where('section', '=', 'Otros')->paginate(10);
+        return view('products.index');
+    }
 
-        return view('products.index', [
-            'pproducts' => $pproducts,
-            'mpproducts' => $mpproducts,
-            'bproducts' => $bproducts,
-            'aproducts' => $aproducts,
-            'oproducts' => $oproducts]);
+    public function getHairdressing()
+    {
+        $products = Product::where('section', '=', 'hairdressing')->paginate(10);
+        return view('products.products', ['products' => $products, 'label' => 'Peluquer&iacute;a']);
+
+    }
+
+    public function getHandsfeetcare()
+    {
+        $products = Product::where('section', '=', 'handsfeetcare')->paginate(10);
+        return view('products.products', ['products' => $products, 'label' => 'Manos y Pies']);
+    }
+
+    public function getBarbershop()
+    {
+        $products = Product::where('section', '=', 'barbershop')->paginate(10);
+        return view('products.products', ['products' => $products, 'label' => 'Barber&iacute;a']);
+    }
+
+    public function getFood()
+    {
+        $products = Product::where('section', '=', 'food')->paginate(10);
+        return view('products.products', ['products' => $products, 'label' => 'Alimentos']);
+    }
+
+    public function getOthers()
+    {
+        $products = Product::where('section', '=', 'other')->paginate(10);
+        return view('products.products', ['products' => $products, 'label' => 'Otro Tipo']);
     }
 
     /**
@@ -34,9 +56,9 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($section, $label)
     {
-        //
+        return view('products.create', ['section' => $section, 'label' => $label]);
     }
 
     /**
@@ -45,9 +67,17 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        $product = new Product;
+        $product->fill($request->all());
+        $product->section = str_replace('products.', '', $request->section);
+        return $product;
+        $product->save();
+
+        return redirect(route($request->section))->with('message', 'Producto creado corectamente');
+
+
     }
 
     /**
@@ -69,7 +99,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        return 'editar: ' . $id;
     }
 
     /**

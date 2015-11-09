@@ -11,7 +11,7 @@
 					<div>
 						{!! link_to_route('clients.index', 'Clientes', $atributes = array(),  ['class' => 'btn btn-default btn-lg btn-block']) !!}
 						{!! link_to_route('employees.index', 'Empleados', $atributes = array(),  ['class' => 'btn btn-default btn-lg btn-block']) !!}
-						{!! link_to_route('products.index', 'Productos', $atributes = array(),  ['class' => 'btn btn-default btn-lg btn-block']) !!}
+						{!! link_to_route('products', 'Productos', $atributes = array(),  ['class' => 'btn btn-default btn-lg btn-block']) !!}
 						<a href="#" class="btn btn-default btn-lg btn-block" id="buttonReportes">Servicios</a>
 					</div>
 				</section>

@@ -11,7 +11,7 @@ class ProductRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,13 @@ class ProductRequest extends Request
     public function rules()
     {
         return [
-            //
+            'code' => 'required|unique:products,id|numeric|digits:4',
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'stock' => 'required|numeric',
+            'active' => 'size:1|in:Y,N',
+            'observation' => 'alpha_num',
+
         ];
     }
 }

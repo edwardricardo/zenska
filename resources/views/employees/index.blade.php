@@ -9,6 +9,7 @@
 
                 <div class="col-md-11 col-xs-12 col-centered">
                     @include('partials.message')
+                    @include('employees.partials.noemployees')
                     <table class="table table-curved">
                         <thead>
                         <tr>
