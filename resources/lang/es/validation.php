@@ -133,7 +133,9 @@ return [
         'code' => 'Código',
         'price' => 'Precio',
         'stock' => 'Existencia',
-        'active' => 'Activo'
+        'active' => 'Activo',
+        'profit_percent' => '% de ganancia',
+        'employee_percent' => '% del empleado'
     ],
 
 ];

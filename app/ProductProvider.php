@@ -21,6 +21,8 @@ class ProductProvider extends Model
     protected $fillable = ['identificator', 'name', 'telephone', 'fax', 'email', 'url', 'contact',
         'address', 'payment', 'discount', 'bank', 'bank_account', 'observation'];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
 
     public function products()
     {

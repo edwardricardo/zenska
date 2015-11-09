@@ -27,8 +27,6 @@ class ProductRequest extends Request
             'price' => 'required|numeric',
             'stock' => 'required|numeric',
             'active' => 'size:1|in:Y,N',
-            'observation' => 'alpha_num',
-
         ];
     }
 }

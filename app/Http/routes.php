@@ -42,12 +42,26 @@ Route::resource('employees', 'EmployeeController');
 Route::resource('providers', 'ProductProviderController');
 
 // Products routes...
+Route::get('products/menu', ['as' => 'products.menu', 'uses' => 'ProductController@getMenu']);
 Route::get('products', ['as' => 'products.index', 'uses' => 'ProductController@index']);
 Route::get('products/hairdressing', ['as' => 'products.hairdressing', 'uses' => 'ProductController@getHairdressing']);
 Route::get('products/handsfeetcare', ['as' => 'products.handsfeetcare', 'uses' => 'ProductController@getHandsfeetcare']);
 Route::get('products/barbershop', ['as' => 'products.barbershop', 'uses' => 'ProductController@getBarbershop']);
 Route::get('products/food', ['as' => 'products.food', 'uses' => 'ProductController@getFood']);
 Route::get('products/others', ['as' => 'products.others', 'uses' => 'ProductController@getOthers']);
-Route::get('products/{id}/edit', ['as' => 'products.edit', 'uses' => 'ProductController@edit']);
+Route::get('products/{product}/edit', ['as' => 'products.edit', 'uses' => 'ProductController@edit']);
 Route::get('products/create/{section}/{label}', ['as' => 'products.create', 'uses' => 'ProductController@create']);
 Route::post('products', ['as' => 'products.store', 'uses' => 'ProductController@store']);
+Route::put('products/{product}', ['as' => 'products.update', 'uses' => 'ProductController@update']);
+Route::delete('products/{product}', ['as' => 'products.destroy', 'uses' => 'ProductController@destroy']);
+
+// Services routes...
+Route::get('services/menu', ['as' => 'services.menu', 'uses' => 'ServiceController@getMenu']);
+Route::get('services/hairdressing', ['as' => 'services.hairdressing', 'uses' => 'ServiceController@getHairdressing']);
+Route::get('services/handsfeetcare', ['as' => 'services.handsfeetcare', 'uses' => 'ServiceController@getHandsfeetcare']);
+Route::get('services/barbershop', ['as' => 'services.barbershop', 'uses' => 'ServiceController@getBarbershop']);
+Route::get('services/create/{section}/{label}', ['as' => 'services.create', 'uses' => 'ServiceController@create']);
+Route::post('services', ['as' => 'services.store', 'uses' => 'ServiceController@store']);
+Route::get('services/{service}/edit', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
+Route::put('services/{service}', ['as' => 'services.update', 'uses' => 'ServiceController@update']);
+Route::delete('services/{service}', ['as' => 'services.destroy', 'uses' => 'ServiceController@destroy']);

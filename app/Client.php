@@ -20,4 +20,6 @@ class Client extends Model
      */
     protected $fillable = ['identificator', 'name', 'lastname', 'mobile', 'email', 'address', 'telephone',
         'birthday', 'sex', 'recommendedby', 'discount', 'clientsince', 'lastvisit', 'photo', 'observation', 'sendmail' ];
+
+    protected $hidden = ['created_at', 'updated_at'];
 }

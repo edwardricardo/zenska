@@ -69,19 +69,26 @@ $factory->define(App\ProductProvider::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Product::class, function (Faker\Generator $faker) {
 
-    $all = \App\ProductProvider::all()->all();
-    $ids = array();
-
-    foreach ($all as $one) {
-        array_push($ids, $one->id);
-    }
-
     return [
         'code' => $faker->unique()->numberBetween($min = 1000, $max = 5000),
         'name' => $faker->word,
         'section' => $faker->randomElement($array = array('hairdressing', 'handsfeetcare', 'barbershop', 'food', 'other')),
         'price' => $faker->numberBetween($min = 1000, $max = 5000),
         'stock' => $faker->randomNumber($nbDigits = 2, $strict = true),
+        'active' => $faker->randomElement($array = array('Y', 'N')),
+        'observation' => $faker->sentence(20)
+    ];
+});
+
+$factory->define(App\Service::class, function (Faker\Generator $faker) {
+
+    return [
+        'code' => $faker->unique()->numberBetween($min = 1000, $max = 5000),
+        'name' => $faker->word,
+        'section' => $faker->randomElement($array = array('hairdressing', 'handsfeetcare', 'barbershop')),
+        'price' => $faker->numberBetween($min = 1000, $max = 5000),
+        'profit_percent' => $faker->numberBetween($min = 50, $max = 70),
+        'employee_percent' => $faker->numberBetween($min = 30, $max = 50),
         'active' => $faker->randomElement($array = array('Y', 'N')),
         'observation' => $faker->sentence(20)
     ];

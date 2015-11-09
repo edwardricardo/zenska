@@ -10,4 +10,6 @@ class Product extends Model
 
     protected $fillable = ['code', 'name', 'price', 'stock', 'active', 'observation'];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
 }
