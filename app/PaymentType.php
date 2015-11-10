@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentType extends Model
 {
-    protected $table = 'paymenttypes';
+    protected $table = 'payment_types';
 
-    protected $fillable = ['code', 'name', 'active', 'observation'];
+    protected $fillable = ['name', 'active', 'observation'];
 
     protected $hidden = ['id', 'created_at', 'update_at'];
+
+    public function paymentmethods()
+    {
+        $this->hasMany('App\PaymentMethod');
+    }
 }

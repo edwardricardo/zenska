@@ -40,6 +40,8 @@ Route::get('maintenance', ['as' => 'maintenance', 'uses' => 'MaintenanceControll
 Route::resource('clients', 'ClientController');
 Route::resource('employees', 'EmployeeController');
 Route::resource('providers', 'ProductProviderController');
+Route::resource('paymenttypes', 'PaymentTypeController');
+Route::resource('paymentmethods', 'PaymentMethodController');
 
 // Products routes...
 Route::get('products/menu', ['as' => 'products.menu', 'uses' => 'ProductController@getMenu']);

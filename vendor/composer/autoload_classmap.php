@@ -10,6 +10,7 @@ return array(
     'CreateClientsTable' => $baseDir . '/database/migrations/2015_10_27_025639_create_clients_table.php',
     'CreateEmployeesTable' => $baseDir . '/database/migrations/2015_10_31_212115_create_employees_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreatePaymentMethodsTable' => $baseDir . '/database/migrations/2015_11_10_010243_create_payment_methods_table.php',
     'CreatePaymentTypesTable' => $baseDir . '/database/migrations/2015_11_09_194918_create_payment_types_table.php',
     'CreateProductProvidersTable' => $baseDir . '/database/migrations/2015_10_31_231730_create_product_providers_table.php',
     'CreateProductsTable' => $baseDir . '/database/migrations/2015_11_01_043230_create_products_table.php',
